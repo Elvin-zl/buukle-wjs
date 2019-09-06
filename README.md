@@ -1,2 +1,2 @@
 # buukle-tc
-Trade center for BUUKLE.TOP , we handle the trade infomation from our user.
+Worker job system for BUUKLE.TOP , we handle the worker and job in this system.
