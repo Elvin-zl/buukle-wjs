@@ -7,25 +7,25 @@ import java.util.List;
 public class WorkerJobExample {
     /**
      *
-     * @mbg.generated Sat Sep 07 13:26:35 CST 2019
+     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
      */
     protected String orderByClause;
 
     /**
      *
-     * @mbg.generated Sat Sep 07 13:26:35 CST 2019
+     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
      */
     protected boolean distinct;
 
     /**
      *
-     * @mbg.generated Sat Sep 07 13:26:35 CST 2019
+     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
      */
     protected List<Criteria> oredCriteria;
 
     /**
      *
-     * @mbg.generated Sat Sep 07 13:26:35 CST 2019
+     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
      */
     public WorkerJobExample() {
         oredCriteria = new ArrayList<Criteria>();
@@ -33,7 +33,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 13:26:35 CST 2019
+     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
      */
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
@@ -41,7 +41,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 13:26:35 CST 2019
+     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
      */
     public String getOrderByClause() {
         return orderByClause;
@@ -49,7 +49,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 13:26:35 CST 2019
+     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
      */
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
@@ -57,7 +57,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 13:26:35 CST 2019
+     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
      */
     public boolean isDistinct() {
         return distinct;
@@ -65,7 +65,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 13:26:35 CST 2019
+     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
      */
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
@@ -73,7 +73,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 13:26:35 CST 2019
+     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
      */
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
@@ -81,7 +81,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 13:26:35 CST 2019
+     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
      */
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
@@ -91,7 +91,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 13:26:35 CST 2019
+     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
      */
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
@@ -103,7 +103,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 13:26:35 CST 2019
+     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
      */
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
@@ -112,7 +112,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 13:26:35 CST 2019
+     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
      */
     public void clear() {
         oredCriteria.clear();
@@ -122,7 +122,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 13:26:35 CST 2019
+     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -2118,7 +2118,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated do_not_delete_during_merge Sat Sep 07 13:26:35 CST 2019
+     * @mbg.generated do_not_delete_during_merge Sat Sep 07 14:34:03 CST 2019
      */
     public static class Criteria extends GeneratedCriteria {
 
@@ -2129,7 +2129,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 13:26:35 CST 2019
+     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
      */
     public static class Criterion {
         private String condition;

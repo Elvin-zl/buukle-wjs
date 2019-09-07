@@ -1,6 +1,8 @@
 package top.buukle.wjs .entity.vo;
 
+import top.buukle.util.mvc.BaseQuery;
 import top.buukle.wjs .entity.WorkerJob;
+
 
 /**
 * @author elvin
