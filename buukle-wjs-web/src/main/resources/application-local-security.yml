@@ -15,4 +15,4 @@ security:
   openRegs: 0
   passport:
     ### security.passport.host 登机牌中心host配置 "?" 之前是跳转认证失败后跳转的登录中心, 之后是完成登陆后的回跳url
-    host: http://tpassport.buukle.top/static/login.html?returnUrl=http://wjs.buukle.top/security/home
+    host: http://tpassport.buukle.top/static/login.html?returnUrl=http://twjs.buukle.top/wjs/home

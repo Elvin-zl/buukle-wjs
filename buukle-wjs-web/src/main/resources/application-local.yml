@@ -1,6 +1,6 @@
 ##服务配置
 server:
-  port: 9191
+  port: 9494
   tomcat:
     max-threads: 800
     uri-encoding: utf-8

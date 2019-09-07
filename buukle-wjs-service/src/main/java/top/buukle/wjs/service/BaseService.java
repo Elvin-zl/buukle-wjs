@@ -4,7 +4,7 @@ package top.buukle.wjs.service;
 import top.buukle.common.call.CommonResponse;
 import top.buukle.common.call.FuzzyResponse;
 import top.buukle.common.call.PageResponse;
-import top.buukle.security.entity.vo.BaseQuery;
+import top.buukle.wjs.entity.vo.BaseQuery;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

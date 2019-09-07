@@ -112,6 +112,9 @@ public class WjsController {
                                  @PathVariable("operationAndViewName")  String operationAndViewName,
                                  ModelAndView modelAndView) throws IOException {
         Object o = null;
+        String applicationName = env.getProperty("spring.application.name");
+        String nameSuffix = applicationName.split("-")[1];
+        modelAndView.addObject("nameSuffix",nameSuffix);
         // 增改页面
         if(operationAndViewName.endsWith("CrudView") || operationAndViewName.endsWith("SetView")){
             webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(request.getServletContext());
