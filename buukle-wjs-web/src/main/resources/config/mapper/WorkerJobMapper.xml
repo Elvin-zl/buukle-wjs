@@ -3,9 +3,10 @@
 <mapper namespace="top.buukle.wjs.dao.WorkerJobMapper">
   <resultMap id="BaseResultMap" type="top.buukle.wjs.entity.WorkerJob">
     <!--
-      WARNING - @mbg.generated  This element was generated on Sat Sep 07 14:34:03 CST 2019. by MyBatis Generator, do not modify.
+      WARNING - @mbg.generated  This element was generated on Mon Sep 09 22:03:37 CST 2019. by MyBatis Generator, do not modify.
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="application_id" jdbcType="INTEGER" property="applicationId" />
     <result column="type" jdbcType="INTEGER" property="type" />
     <result column="description" jdbcType="VARCHAR" property="description" />
     <result column="bean_reference_name" jdbcType="VARCHAR" property="beanReferenceName" />
@@ -36,7 +37,7 @@
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
-      WARNING - @mbg.generated  This element was generated on Sat Sep 07 14:34:03 CST 2019. by MyBatis Generator, do not modify.
+      WARNING - @mbg.generated  This element was generated on Mon Sep 09 22:03:37 CST 2019. by MyBatis Generator, do not modify.
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -68,7 +69,7 @@
   </sql>
   <sql id="Update_By_Example_Where_Clause">
     <!--
-      WARNING - @mbg.generated  This element was generated on Sat Sep 07 14:34:03 CST 2019. by MyBatis Generator, do not modify.
+      WARNING - @mbg.generated  This element was generated on Mon Sep 09 22:03:37 CST 2019. by MyBatis Generator, do not modify.
     -->
     <where>
       <foreach collection="example.oredCriteria" item="criteria" separator="or">
@@ -100,16 +101,16 @@
   </sql>
   <sql id="Base_Column_List">
     <!--
-      WARNING - @mbg.generated  This element was generated on Sat Sep 07 14:34:03 CST 2019. by MyBatis Generator, do not modify.
+      WARNING - @mbg.generated  This element was generated on Mon Sep 09 22:03:37 CST 2019. by MyBatis Generator, do not modify.
     -->
-    id, type, description, bean_reference_name, method, params, cron_expression, lock_status, 
-    result_msg, execute_type, ip_group, time_out, fail_strategy, retry_count, remark, 
-    gmt_created, creator, creator_role_id, creator_code, gmt_modified, modifier, modifier_code, 
-    status, bak01, bak02, bak03, bak04, bak05
+    id, application_id, type, description, bean_reference_name, method, params, cron_expression, 
+    lock_status, result_msg, execute_type, ip_group, time_out, fail_strategy, retry_count, 
+    remark, gmt_created, creator, creator_role_id, creator_code, gmt_modified, modifier, 
+    modifier_code, status, bak01, bak02, bak03, bak04, bak05
   </sql>
   <select id="selectByExample" parameterType="top.buukle.wjs.entity.WorkerJobExample" resultMap="BaseResultMap">
     <!--
-      WARNING - @mbg.generated  This element was generated on Sat Sep 07 14:34:03 CST 2019. by MyBatis Generator, do not modify.
+      WARNING - @mbg.generated  This element was generated on Mon Sep 09 22:03:37 CST 2019. by MyBatis Generator, do not modify.
     -->
     select
     <if test="distinct">
@@ -126,7 +127,7 @@
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     <!--
-      WARNING - @mbg.generated  This element was generated on Sat Sep 07 14:34:03 CST 2019. by MyBatis Generator, do not modify.
+      WARNING - @mbg.generated  This element was generated on Mon Sep 09 22:03:37 CST 2019. by MyBatis Generator, do not modify.
     -->
     select 
     <include refid="Base_Column_List" />
@@ -135,14 +136,14 @@
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     <!--
-      WARNING - @mbg.generated  This element was generated on Sat Sep 07 14:34:03 CST 2019. by MyBatis Generator, do not modify.
+      WARNING - @mbg.generated  This element was generated on Mon Sep 09 22:03:37 CST 2019. by MyBatis Generator, do not modify.
     -->
     delete from worker_job
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="top.buukle.wjs.entity.WorkerJobExample">
     <!--
-      WARNING - @mbg.generated  This element was generated on Sat Sep 07 14:34:03 CST 2019. by MyBatis Generator, do not modify.
+      WARNING - @mbg.generated  This element was generated on Mon Sep 09 22:03:37 CST 2019. by MyBatis Generator, do not modify.
     -->
     delete from worker_job
     <if test="_parameter != null">
@@ -151,37 +152,40 @@
   </delete>
   <insert id="insert" parameterType="top.buukle.wjs.entity.WorkerJob">
     <!--
-      WARNING - @mbg.generated  This element was generated on Sat Sep 07 14:34:03 CST 2019. by MyBatis Generator, do not modify.
+      WARNING - @mbg.generated  This element was generated on Mon Sep 09 22:03:37 CST 2019. by MyBatis Generator, do not modify.
     -->
-    insert into worker_job (id, type, description, 
-      bean_reference_name, method, params, 
-      cron_expression, lock_status, result_msg, 
-      execute_type, ip_group, time_out, 
-      fail_strategy, retry_count, remark, 
-      gmt_created, creator, creator_role_id, 
-      creator_code, gmt_modified, modifier, 
-      modifier_code, status, bak01, 
-      bak02, bak03, bak04, 
-      bak05)
-    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, 
-      #{beanReferenceName,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR}, #{params,jdbcType=VARCHAR}, 
-      #{cronExpression,jdbcType=VARCHAR}, #{lockStatus,jdbcType=TINYINT}, #{resultMsg,jdbcType=VARCHAR}, 
-      #{executeType,jdbcType=TINYINT}, #{ipGroup,jdbcType=VARCHAR}, #{timeOut,jdbcType=INTEGER}, 
-      #{failStrategy,jdbcType=VARCHAR}, #{retryCount,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
-      #{gmtCreated,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{creatorRoleId,jdbcType=INTEGER}, 
-      #{creatorCode,jdbcType=VARCHAR}, #{gmtModified,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR}, 
-      #{modifierCode,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{bak01,jdbcType=VARCHAR}, 
-      #{bak02,jdbcType=VARCHAR}, #{bak03,jdbcType=VARCHAR}, #{bak04,jdbcType=VARCHAR}, 
-      #{bak05,jdbcType=VARCHAR})
+    insert into worker_job (id, application_id, type, 
+      description, bean_reference_name, method, 
+      params, cron_expression, lock_status, 
+      result_msg, execute_type, ip_group, 
+      time_out, fail_strategy, retry_count, 
+      remark, gmt_created, creator, 
+      creator_role_id, creator_code, gmt_modified, 
+      modifier, modifier_code, status, 
+      bak01, bak02, bak03, 
+      bak04, bak05)
+    values (#{id,jdbcType=INTEGER}, #{applicationId,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, 
+      #{description,jdbcType=VARCHAR}, #{beanReferenceName,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR}, 
+      #{params,jdbcType=VARCHAR}, #{cronExpression,jdbcType=VARCHAR}, #{lockStatus,jdbcType=TINYINT}, 
+      #{resultMsg,jdbcType=VARCHAR}, #{executeType,jdbcType=TINYINT}, #{ipGroup,jdbcType=VARCHAR}, 
+      #{timeOut,jdbcType=INTEGER}, #{failStrategy,jdbcType=VARCHAR}, #{retryCount,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{gmtCreated,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, 
+      #{creatorRoleId,jdbcType=INTEGER}, #{creatorCode,jdbcType=VARCHAR}, #{gmtModified,jdbcType=TIMESTAMP}, 
+      #{modifier,jdbcType=VARCHAR}, #{modifierCode,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{bak01,jdbcType=VARCHAR}, #{bak02,jdbcType=VARCHAR}, #{bak03,jdbcType=VARCHAR}, 
+      #{bak04,jdbcType=VARCHAR}, #{bak05,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="top.buukle.wjs.entity.WorkerJob">
     <!--
-      WARNING - @mbg.generated  This element was generated on Sat Sep 07 14:34:03 CST 2019. by MyBatis Generator, do not modify.
+      WARNING - @mbg.generated  This element was generated on Mon Sep 09 22:03:37 CST 2019. by MyBatis Generator, do not modify.
     -->
     insert into worker_job
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
+      </if>
+      <if test="applicationId != null">
+        application_id,
       </if>
       <if test="type != null">
         type,
@@ -269,6 +273,9 @@
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
+      <if test="applicationId != null">
+        #{applicationId,jdbcType=INTEGER},
+      </if>
       <if test="type != null">
         #{type,jdbcType=INTEGER},
       </if>
@@ -354,7 +361,7 @@
   </insert>
   <select id="countByExample" parameterType="top.buukle.wjs.entity.WorkerJobExample" resultType="java.lang.Long">
     <!--
-      WARNING - @mbg.generated  This element was generated on Sat Sep 07 14:34:03 CST 2019. by MyBatis Generator, do not modify.
+      WARNING - @mbg.generated  This element was generated on Mon Sep 09 22:03:37 CST 2019. by MyBatis Generator, do not modify.
     -->
     select count(*) from worker_job
     <if test="_parameter != null">
@@ -363,12 +370,15 @@
   </select>
   <update id="updateByExampleSelective" parameterType="map">
     <!--
-      WARNING - @mbg.generated  This element was generated on Sat Sep 07 14:34:03 CST 2019. by MyBatis Generator, do not modify.
+      WARNING - @mbg.generated  This element was generated on Mon Sep 09 22:03:37 CST 2019. by MyBatis Generator, do not modify.
     -->
     update worker_job
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.applicationId != null">
+        application_id = #{record.applicationId,jdbcType=INTEGER},
       </if>
       <if test="record.type != null">
         type = #{record.type,jdbcType=INTEGER},
@@ -458,10 +468,11 @@
   </update>
   <update id="updateByExample" parameterType="map">
     <!--
-      WARNING - @mbg.generated  This element was generated on Sat Sep 07 14:34:03 CST 2019. by MyBatis Generator, do not modify.
+      WARNING - @mbg.generated  This element was generated on Mon Sep 09 22:03:37 CST 2019. by MyBatis Generator, do not modify.
     -->
     update worker_job
     set id = #{record.id,jdbcType=INTEGER},
+      application_id = #{record.applicationId,jdbcType=INTEGER},
       type = #{record.type,jdbcType=INTEGER},
       description = #{record.description,jdbcType=VARCHAR},
       bean_reference_name = #{record.beanReferenceName,jdbcType=VARCHAR},
@@ -495,10 +506,13 @@
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="top.buukle.wjs.entity.WorkerJob">
     <!--
-      WARNING - @mbg.generated  This element was generated on Sat Sep 07 14:34:03 CST 2019. by MyBatis Generator, do not modify.
+      WARNING - @mbg.generated  This element was generated on Mon Sep 09 22:03:37 CST 2019. by MyBatis Generator, do not modify.
     -->
     update worker_job
     <set>
+      <if test="applicationId != null">
+        application_id = #{applicationId,jdbcType=INTEGER},
+      </if>
       <if test="type != null">
         type = #{type,jdbcType=INTEGER},
       </if>
@@ -585,10 +599,11 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="top.buukle.wjs.entity.WorkerJob">
     <!--
-      WARNING - @mbg.generated  This element was generated on Sat Sep 07 14:34:03 CST 2019. by MyBatis Generator, do not modify.
+      WARNING - @mbg.generated  This element was generated on Mon Sep 09 22:03:37 CST 2019. by MyBatis Generator, do not modify.
     -->
     update worker_job
-    set type = #{type,jdbcType=INTEGER},
+    set application_id = #{applicationId,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
       description = #{description,jdbcType=VARCHAR},
       bean_reference_name = #{beanReferenceName,jdbcType=VARCHAR},
       method = #{method,jdbcType=VARCHAR},

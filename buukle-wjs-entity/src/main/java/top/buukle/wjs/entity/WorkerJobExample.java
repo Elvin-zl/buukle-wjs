@@ -7,25 +7,25 @@ import java.util.List;
 public class WorkerJobExample {
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     protected String orderByClause;
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     protected boolean distinct;
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     protected List<Criteria> oredCriteria;
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJobExample() {
         oredCriteria = new ArrayList<Criteria>();
@@ -33,7 +33,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
@@ -41,7 +41,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public String getOrderByClause() {
         return orderByClause;
@@ -49,7 +49,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
@@ -57,7 +57,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public boolean isDistinct() {
         return distinct;
@@ -65,7 +65,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
@@ -73,7 +73,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
@@ -81,7 +81,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
@@ -91,7 +91,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
@@ -103,7 +103,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
@@ -112,7 +112,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void clear() {
         oredCriteria.clear();
@@ -122,7 +122,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -222,6 +222,66 @@ public class WorkerJobExample {
 
         public Criteria andIdNotBetween(Integer value1, Integer value2) {
             addCriterion("id not between", value1, value2, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andApplicationIdIsNull() {
+            addCriterion("application_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andApplicationIdIsNotNull() {
+            addCriterion("application_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andApplicationIdEqualTo(Integer value) {
+            addCriterion("application_id =", value, "applicationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApplicationIdNotEqualTo(Integer value) {
+            addCriterion("application_id <>", value, "applicationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApplicationIdGreaterThan(Integer value) {
+            addCriterion("application_id >", value, "applicationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApplicationIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("application_id >=", value, "applicationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApplicationIdLessThan(Integer value) {
+            addCriterion("application_id <", value, "applicationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApplicationIdLessThanOrEqualTo(Integer value) {
+            addCriterion("application_id <=", value, "applicationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApplicationIdIn(List<Integer> values) {
+            addCriterion("application_id in", values, "applicationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApplicationIdNotIn(List<Integer> values) {
+            addCriterion("application_id not in", values, "applicationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApplicationIdBetween(Integer value1, Integer value2) {
+            addCriterion("application_id between", value1, value2, "applicationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApplicationIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("application_id not between", value1, value2, "applicationId");
             return (Criteria) this;
         }
 
@@ -2118,7 +2178,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated do_not_delete_during_merge Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated do_not_delete_during_merge Mon Sep 09 22:03:37 CST 2019
      */
     public static class Criteria extends GeneratedCriteria {
 
@@ -2129,7 +2189,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public static class Criterion {
         private String condition;

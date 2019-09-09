@@ -15,50 +15,58 @@ public class WorkerJob implements Serializable {
      * 作业id
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private Integer id;
+
+    /**
+     * 所属应用id
+     *
+     *
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
+     */
+    private Integer applicationId;
 
     /**
      * 作业类型
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private Integer type;
 
     /**
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private String description;
 
     /**
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private String beanReferenceName;
 
     /**
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private String method;
 
     /**
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private String params;
 
     /**
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private String cronExpression;
 
@@ -66,14 +74,14 @@ public class WorkerJob implements Serializable {
      * 结果状态(0 未锁定,1 锁定中)
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private Byte lockStatus;
 
     /**
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private String resultMsg;
 
@@ -81,14 +89,14 @@ public class WorkerJob implements Serializable {
      * 执行类型(1 单机执行,2 集群执行)
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private Byte executeType;
 
     /**
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private String ipGroup;
 
@@ -96,14 +104,14 @@ public class WorkerJob implements Serializable {
      * 超时
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private Integer timeOut;
 
     /**
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private String failStrategy;
 
@@ -111,28 +119,28 @@ public class WorkerJob implements Serializable {
      * 重试次数
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private Integer retryCount;
 
     /**
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private String remark;
 
     /**
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private Date gmtCreated;
 
     /**
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private String creator;
 
@@ -140,35 +148,35 @@ public class WorkerJob implements Serializable {
      * 创建者的角色id
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private Integer creatorRoleId;
 
     /**
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private String creatorCode;
 
     /**
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private Date gmtModified;
 
     /**
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private String modifier;
 
     /**
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private String modifierCode;
 
@@ -176,48 +184,48 @@ public class WorkerJob implements Serializable {
      * 任务状态
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private Integer status;
 
     /**
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private String bak01;
 
     /**
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private String bak02;
 
     /**
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private String bak03;
 
     /**
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private String bak04;
 
     /**
      *
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private String bak05;
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     private static final long serialVersionUID = 1L;
 
@@ -226,7 +234,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.id
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public Integer getId() {
         return id;
@@ -234,7 +242,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withId(Integer id) {
         this.setId(id);
@@ -246,10 +254,41 @@ public class WorkerJob implements Serializable {
      *
      * @param id the value for buukle-wjs..worker_job.id
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    /**
+     * This method returns the value of the database column buukle-wjs..worker_job.application_id
+     *
+     * @return the value of buukle-wjs..worker_job.application_id
+     *
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
+     */
+    public Integer getApplicationId() {
+        return applicationId;
+    }
+
+    /**
+     *
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
+     */
+    public WorkerJob withApplicationId(Integer applicationId) {
+        this.setApplicationId(applicationId);
+        return this;
+    }
+
+    /**
+     * This method sets the value of the database column buukle-wjs..worker_job.application_id
+     *
+     * @param applicationId the value for buukle-wjs..worker_job.application_id
+     *
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
+     */
+    public void setApplicationId(Integer applicationId) {
+        this.applicationId = applicationId;
     }
 
     /**
@@ -257,7 +296,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.type
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public Integer getType() {
         return type;
@@ -265,7 +304,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withType(Integer type) {
         this.setType(type);
@@ -277,7 +316,7 @@ public class WorkerJob implements Serializable {
      *
      * @param type the value for buukle-wjs..worker_job.type
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setType(Integer type) {
         this.type = type;
@@ -288,7 +327,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.description
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public String getDescription() {
         return description;
@@ -296,7 +335,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withDescription(String description) {
         this.setDescription(description);
@@ -308,7 +347,7 @@ public class WorkerJob implements Serializable {
      *
      * @param description the value for buukle-wjs..worker_job.description
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setDescription(String description) {
         this.description = description;
@@ -319,7 +358,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.bean_reference_name
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public String getBeanReferenceName() {
         return beanReferenceName;
@@ -327,7 +366,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withBeanReferenceName(String beanReferenceName) {
         this.setBeanReferenceName(beanReferenceName);
@@ -339,7 +378,7 @@ public class WorkerJob implements Serializable {
      *
      * @param beanReferenceName the value for buukle-wjs..worker_job.bean_reference_name
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setBeanReferenceName(String beanReferenceName) {
         this.beanReferenceName = beanReferenceName;
@@ -350,7 +389,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.method
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public String getMethod() {
         return method;
@@ -358,7 +397,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withMethod(String method) {
         this.setMethod(method);
@@ -370,7 +409,7 @@ public class WorkerJob implements Serializable {
      *
      * @param method the value for buukle-wjs..worker_job.method
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setMethod(String method) {
         this.method = method;
@@ -381,7 +420,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.params
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public String getParams() {
         return params;
@@ -389,7 +428,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withParams(String params) {
         this.setParams(params);
@@ -401,7 +440,7 @@ public class WorkerJob implements Serializable {
      *
      * @param params the value for buukle-wjs..worker_job.params
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setParams(String params) {
         this.params = params;
@@ -412,7 +451,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.cron_expression
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public String getCronExpression() {
         return cronExpression;
@@ -420,7 +459,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withCronExpression(String cronExpression) {
         this.setCronExpression(cronExpression);
@@ -432,7 +471,7 @@ public class WorkerJob implements Serializable {
      *
      * @param cronExpression the value for buukle-wjs..worker_job.cron_expression
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setCronExpression(String cronExpression) {
         this.cronExpression = cronExpression;
@@ -443,7 +482,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.lock_status
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public Byte getLockStatus() {
         return lockStatus;
@@ -451,7 +490,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withLockStatus(Byte lockStatus) {
         this.setLockStatus(lockStatus);
@@ -463,7 +502,7 @@ public class WorkerJob implements Serializable {
      *
      * @param lockStatus the value for buukle-wjs..worker_job.lock_status
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setLockStatus(Byte lockStatus) {
         this.lockStatus = lockStatus;
@@ -474,7 +513,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.result_msg
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public String getResultMsg() {
         return resultMsg;
@@ -482,7 +521,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withResultMsg(String resultMsg) {
         this.setResultMsg(resultMsg);
@@ -494,7 +533,7 @@ public class WorkerJob implements Serializable {
      *
      * @param resultMsg the value for buukle-wjs..worker_job.result_msg
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setResultMsg(String resultMsg) {
         this.resultMsg = resultMsg;
@@ -505,7 +544,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.execute_type
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public Byte getExecuteType() {
         return executeType;
@@ -513,7 +552,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withExecuteType(Byte executeType) {
         this.setExecuteType(executeType);
@@ -525,7 +564,7 @@ public class WorkerJob implements Serializable {
      *
      * @param executeType the value for buukle-wjs..worker_job.execute_type
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setExecuteType(Byte executeType) {
         this.executeType = executeType;
@@ -536,7 +575,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.ip_group
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public String getIpGroup() {
         return ipGroup;
@@ -544,7 +583,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withIpGroup(String ipGroup) {
         this.setIpGroup(ipGroup);
@@ -556,7 +595,7 @@ public class WorkerJob implements Serializable {
      *
      * @param ipGroup the value for buukle-wjs..worker_job.ip_group
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setIpGroup(String ipGroup) {
         this.ipGroup = ipGroup;
@@ -567,7 +606,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.time_out
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public Integer getTimeOut() {
         return timeOut;
@@ -575,7 +614,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withTimeOut(Integer timeOut) {
         this.setTimeOut(timeOut);
@@ -587,7 +626,7 @@ public class WorkerJob implements Serializable {
      *
      * @param timeOut the value for buukle-wjs..worker_job.time_out
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setTimeOut(Integer timeOut) {
         this.timeOut = timeOut;
@@ -598,7 +637,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.fail_strategy
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public String getFailStrategy() {
         return failStrategy;
@@ -606,7 +645,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withFailStrategy(String failStrategy) {
         this.setFailStrategy(failStrategy);
@@ -618,7 +657,7 @@ public class WorkerJob implements Serializable {
      *
      * @param failStrategy the value for buukle-wjs..worker_job.fail_strategy
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setFailStrategy(String failStrategy) {
         this.failStrategy = failStrategy;
@@ -629,7 +668,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.retry_count
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public Integer getRetryCount() {
         return retryCount;
@@ -637,7 +676,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withRetryCount(Integer retryCount) {
         this.setRetryCount(retryCount);
@@ -649,7 +688,7 @@ public class WorkerJob implements Serializable {
      *
      * @param retryCount the value for buukle-wjs..worker_job.retry_count
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setRetryCount(Integer retryCount) {
         this.retryCount = retryCount;
@@ -660,7 +699,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.remark
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public String getRemark() {
         return remark;
@@ -668,7 +707,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withRemark(String remark) {
         this.setRemark(remark);
@@ -680,7 +719,7 @@ public class WorkerJob implements Serializable {
      *
      * @param remark the value for buukle-wjs..worker_job.remark
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setRemark(String remark) {
         this.remark = remark;
@@ -691,7 +730,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.gmt_created
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public Date getGmtCreated() {
         return gmtCreated;
@@ -699,7 +738,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withGmtCreated(Date gmtCreated) {
         this.setGmtCreated(gmtCreated);
@@ -711,7 +750,7 @@ public class WorkerJob implements Serializable {
      *
      * @param gmtCreated the value for buukle-wjs..worker_job.gmt_created
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setGmtCreated(Date gmtCreated) {
         this.gmtCreated = gmtCreated;
@@ -722,7 +761,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.creator
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public String getCreator() {
         return creator;
@@ -730,7 +769,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withCreator(String creator) {
         this.setCreator(creator);
@@ -742,7 +781,7 @@ public class WorkerJob implements Serializable {
      *
      * @param creator the value for buukle-wjs..worker_job.creator
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setCreator(String creator) {
         this.creator = creator;
@@ -753,7 +792,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.creator_role_id
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public Integer getCreatorRoleId() {
         return creatorRoleId;
@@ -761,7 +800,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withCreatorRoleId(Integer creatorRoleId) {
         this.setCreatorRoleId(creatorRoleId);
@@ -773,7 +812,7 @@ public class WorkerJob implements Serializable {
      *
      * @param creatorRoleId the value for buukle-wjs..worker_job.creator_role_id
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setCreatorRoleId(Integer creatorRoleId) {
         this.creatorRoleId = creatorRoleId;
@@ -784,7 +823,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.creator_code
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public String getCreatorCode() {
         return creatorCode;
@@ -792,7 +831,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withCreatorCode(String creatorCode) {
         this.setCreatorCode(creatorCode);
@@ -804,7 +843,7 @@ public class WorkerJob implements Serializable {
      *
      * @param creatorCode the value for buukle-wjs..worker_job.creator_code
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setCreatorCode(String creatorCode) {
         this.creatorCode = creatorCode;
@@ -815,7 +854,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.gmt_modified
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public Date getGmtModified() {
         return gmtModified;
@@ -823,7 +862,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withGmtModified(Date gmtModified) {
         this.setGmtModified(gmtModified);
@@ -835,7 +874,7 @@ public class WorkerJob implements Serializable {
      *
      * @param gmtModified the value for buukle-wjs..worker_job.gmt_modified
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setGmtModified(Date gmtModified) {
         this.gmtModified = gmtModified;
@@ -846,7 +885,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.modifier
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public String getModifier() {
         return modifier;
@@ -854,7 +893,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withModifier(String modifier) {
         this.setModifier(modifier);
@@ -866,7 +905,7 @@ public class WorkerJob implements Serializable {
      *
      * @param modifier the value for buukle-wjs..worker_job.modifier
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setModifier(String modifier) {
         this.modifier = modifier;
@@ -877,7 +916,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.modifier_code
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public String getModifierCode() {
         return modifierCode;
@@ -885,7 +924,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withModifierCode(String modifierCode) {
         this.setModifierCode(modifierCode);
@@ -897,7 +936,7 @@ public class WorkerJob implements Serializable {
      *
      * @param modifierCode the value for buukle-wjs..worker_job.modifier_code
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setModifierCode(String modifierCode) {
         this.modifierCode = modifierCode;
@@ -908,7 +947,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.status
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public Integer getStatus() {
         return status;
@@ -916,7 +955,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withStatus(Integer status) {
         this.setStatus(status);
@@ -928,7 +967,7 @@ public class WorkerJob implements Serializable {
      *
      * @param status the value for buukle-wjs..worker_job.status
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setStatus(Integer status) {
         this.status = status;
@@ -939,7 +978,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.bak01
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public String getBak01() {
         return bak01;
@@ -947,7 +986,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withBak01(String bak01) {
         this.setBak01(bak01);
@@ -959,7 +998,7 @@ public class WorkerJob implements Serializable {
      *
      * @param bak01 the value for buukle-wjs..worker_job.bak01
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setBak01(String bak01) {
         this.bak01 = bak01;
@@ -970,7 +1009,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.bak02
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public String getBak02() {
         return bak02;
@@ -978,7 +1017,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withBak02(String bak02) {
         this.setBak02(bak02);
@@ -990,7 +1029,7 @@ public class WorkerJob implements Serializable {
      *
      * @param bak02 the value for buukle-wjs..worker_job.bak02
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setBak02(String bak02) {
         this.bak02 = bak02;
@@ -1001,7 +1040,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.bak03
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public String getBak03() {
         return bak03;
@@ -1009,7 +1048,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withBak03(String bak03) {
         this.setBak03(bak03);
@@ -1021,7 +1060,7 @@ public class WorkerJob implements Serializable {
      *
      * @param bak03 the value for buukle-wjs..worker_job.bak03
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setBak03(String bak03) {
         this.bak03 = bak03;
@@ -1032,7 +1071,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.bak04
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public String getBak04() {
         return bak04;
@@ -1040,7 +1079,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withBak04(String bak04) {
         this.setBak04(bak04);
@@ -1052,7 +1091,7 @@ public class WorkerJob implements Serializable {
      *
      * @param bak04 the value for buukle-wjs..worker_job.bak04
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setBak04(String bak04) {
         this.bak04 = bak04;
@@ -1063,7 +1102,7 @@ public class WorkerJob implements Serializable {
      *
      * @return the value of buukle-wjs..worker_job.bak05
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public String getBak05() {
         return bak05;
@@ -1071,7 +1110,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public WorkerJob withBak05(String bak05) {
         this.setBak05(bak05);
@@ -1083,7 +1122,7 @@ public class WorkerJob implements Serializable {
      *
      * @param bak05 the value for buukle-wjs..worker_job.bak05
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     public void setBak05(String bak05) {
         this.bak05 = bak05;
@@ -1091,7 +1130,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     @Override
     public String toString() {
@@ -1100,6 +1139,7 @@ public class WorkerJob implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
+        sb.append(", applicationId=").append(applicationId);
         sb.append(", type=").append(type);
         sb.append(", description=").append(description);
         sb.append(", beanReferenceName=").append(beanReferenceName);
@@ -1133,7 +1173,7 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     @Override
     public boolean equals(Object that) {
@@ -1148,6 +1188,7 @@ public class WorkerJob implements Serializable {
         }
         WorkerJob other = (WorkerJob) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
+            && (this.getApplicationId() == null ? other.getApplicationId() == null : this.getApplicationId().equals(other.getApplicationId()))
             && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
             && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()))
             && (this.getBeanReferenceName() == null ? other.getBeanReferenceName() == null : this.getBeanReferenceName().equals(other.getBeanReferenceName()))
@@ -1179,13 +1220,14 @@ public class WorkerJob implements Serializable {
 
     /**
      *
-     * @mbg.generated Sat Sep 07 14:34:03 CST 2019
+     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
      */
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+        result = prime * result + ((getApplicationId() == null) ? 0 : getApplicationId().hashCode());
         result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
         result = prime * result + ((getDescription() == null) ? 0 : getDescription().hashCode());
         result = prime * result + ((getBeanReferenceName() == null) ? 0 : getBeanReferenceName().hashCode());
