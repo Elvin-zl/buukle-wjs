@@ -1,0 +1,31 @@
+## wjs-plugin 相关配置
+wjs:
+  server:
+    ### wjs.server.name ,调用 wjs 的服务名称
+    name: buukle-wjs
+    ### wjs.server.addApplicationJobURI ,调用 wjs 服务 addApplicationWorkerAndJob 资源的URI
+    addApplicationJobURI: /api/app/addApplicationJobURI
+    ### wjs.server.getApplicationJobURI ,调用 wjs 服务 getApplicationJobURI 资源的URI
+    getApplicationJobURI: /api/app/getApplicationJobURI
+  ### quartz 调度器配置
+  scheduler:
+    ### 调度器线程池类型
+    poolClass: org.quartz.simpl.SimpleThreadPool
+    ### 调度器线程池size
+    poolSize: 4
+    ### 调度器线程池心跳
+    priority: 5
+  ### quartz 执行任务的线程池配置
+  pool:
+    ### 线程池核心线程数
+    coreSize: 5
+    ### 线程池最大线程数
+    maxSize: 20
+    ### 队列容量
+    queueCapacity: 300
+    ### 空闲活跃时间
+    keepAliveSeconds: 30
+
+
+
+

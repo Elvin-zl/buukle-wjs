@@ -10,4 +10,4 @@
  *  elvin        2019年9月4日19:51:15    1.0.0
  *
  */
-package top.buukle.tc.plugin;
+package top.buukle.wjs.plugin;
