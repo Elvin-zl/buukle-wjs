@@ -14,7 +14,7 @@ import org.apache.curator.framework.CuratorFramework;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import top.buukle.wjs.plugin.util.SystemUtil;
+import top.buukle.util.SystemUtil;
 import top.buukle.wjs.plugin.zk.listener.impl.ApplicationListener;
 import top.buukle.wjs.plugin.zk.listener.impl.WorkerJobListener;
 
