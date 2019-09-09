@@ -8,7 +8,7 @@
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-package top.buukle.wjs.plugin.handler;
+package top.buukle.wjs.plugin.quartz.quartzJobBean.handler;
 
 import top.buukle.common.call.CommonResponse;
 
@@ -18,6 +18,6 @@ import top.buukle.common.call.CommonResponse;
  * @create 2019/9/9
  * @since 1.0.0
  */
-public abstract class AbstractWorkerJobHandler {
+public abstract class AbstractHandler {
     abstract CommonResponse handle();
 }

@@ -10,15 +10,15 @@
  */
 package top.buukle.wjs.plugin;
 
+import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Component;
 import top.buukle.common.call.CommonRequest;
 import top.buukle.common.call.PageResponse;
 import top.buukle.wjs.entity.WorkerJob;
 import top.buukle.wjs.plugin.invoker.SchedulerInvoker;
+import top.buukle.wjs.plugin.quartz.QuartzOperator;
 import top.buukle.wjs.plugin.zk.ZkListenerInitial;
 
 import javax.annotation.PostConstruct;
@@ -32,7 +32,7 @@ import java.util.List;
  * @since 1.0.0
  */
 @Component
-public class QuartzJobInitial {
+public class Initial {
 
     @Autowired
     private ZkListenerInitial listenerInitial;
@@ -40,8 +40,8 @@ public class QuartzJobInitial {
     private SchedulerInvoker schedulerInvoker;
     @Autowired
     private Environment env;
-    @Resource(name = "buukle.wjs.plugin.SchedulerFactoryBean")
-    private SchedulerFactoryBean scheduler;
+    @Resource(name = "buukle.wjs.plugin.scheduler")
+    private Scheduler scheduler;
 
     @PostConstruct
     void init() throws Exception {
@@ -54,7 +54,7 @@ public class QuartzJobInitial {
         List<WorkerJob> list = (List<WorkerJob>) body.getList();
         // 遍历创建定时任务,并加上监控
         for (WorkerJob workerJob : list) {
-            QuartzJobOperator.createJob(workerJob,scheduler);
+            QuartzOperator.createJob(workerJob,scheduler);
         }
     }
 }

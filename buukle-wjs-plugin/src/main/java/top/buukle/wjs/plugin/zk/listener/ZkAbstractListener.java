@@ -8,7 +8,7 @@
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-package top.buukle.wjs.plugin.zk.abstracts;
+package top.buukle.wjs.plugin.zk.listener;
 
 import org.apache.curator.framework.recipes.cache.TreeCacheListener;
 

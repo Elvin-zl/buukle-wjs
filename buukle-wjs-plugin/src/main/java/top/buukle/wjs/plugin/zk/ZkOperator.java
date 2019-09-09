@@ -13,7 +13,7 @@ package top.buukle.wjs.plugin.zk;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.TreeCache;
 import top.buukle.util.log.BaseLogger;
-import top.buukle.wjs.plugin.zk.abstracts.ZkAbstractListener;
+import top.buukle.wjs.plugin.zk.listener.ZkAbstractListener;
 
 /**
  * @description 〈zk节点操作工具〉

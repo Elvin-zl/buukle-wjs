@@ -8,7 +8,7 @@
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-package top.buukle.wjs.plugin.executor;
+package top.buukle.wjs.plugin.quartz.quartzJobBean.threadpool;
 
 import top.buukle.wjs.entity.WorkerJob;
 
@@ -18,7 +18,7 @@ import top.buukle.wjs.entity.WorkerJob;
  * @create 2019/9/10
  * @since 1.0.0
  */
-public  class QuartzJobRunable extends WorkerJob implements Runnable{
+public  class ThreadPoolRunable extends WorkerJob implements Runnable{
 
     @Override
     public void run() {
