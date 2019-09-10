@@ -24,8 +24,7 @@ public class ApplicationListener extends ZkAbstractListener {
 
 
     public ApplicationListener(String appPath) {
-        super();
-        super.setAppPath(appPath);
+        super(appPath);
     }
 
     @Override

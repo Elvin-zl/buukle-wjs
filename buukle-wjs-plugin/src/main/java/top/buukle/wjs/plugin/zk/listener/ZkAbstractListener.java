@@ -22,6 +22,12 @@ public abstract class ZkAbstractListener implements TreeCacheListener {
 
     private String appPath;
 
+    public ZkAbstractListener() {
+    }
+    public ZkAbstractListener(String appPath) {
+        this.appPath = appPath;
+    }
+
     public String getAppPath() {
         return appPath;
     }
