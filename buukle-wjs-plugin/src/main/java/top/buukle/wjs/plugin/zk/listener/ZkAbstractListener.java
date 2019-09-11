@@ -20,19 +20,17 @@ import org.apache.curator.framework.recipes.cache.TreeCacheListener;
  */
 public abstract class ZkAbstractListener implements TreeCacheListener {
 
-    private String appPath;
+    private String path;
 
-    public ZkAbstractListener() {
-    }
-    public ZkAbstractListener(String appPath) {
-        this.appPath = appPath;
+    public ZkAbstractListener(String path) {
+        this.path = path;
     }
 
-    public String getAppPath() {
-        return appPath;
+    public String getPath() {
+        return path;
     }
 
-    public void setAppPath(String appPath) {
-        this.appPath = appPath;
+    public void setPath(String path) {
+        this.path = path;
     }
 }

@@ -22,8 +22,8 @@ import top.buukle.wjs.plugin.zk.listener.ZkAbstractListener;
  */
 public class WorkerJobListener extends ZkAbstractListener {
 
-    public WorkerJobListener(String appPath) {
-        super();
+    public WorkerJobListener(String path) {
+        super(path);
     }
 
     @Override

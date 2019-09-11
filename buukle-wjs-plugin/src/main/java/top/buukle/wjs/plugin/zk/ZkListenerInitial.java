@@ -37,6 +37,8 @@ public class ZkListenerInitial {
     private static final String BUUKLE_WJS_APP_PARENT_NODE = "/buukle.wjs.app.parent";
     /** 任务父节点*/
     private static final String BUUKLE_WJS_JOB_PARENT_NODE = "/buukle.wjs.job.parent";
+    /** 应用领导节点*/
+    private static final String BUUKLE_WJS_LEADER_NODE = "/buukle.wjs.leader";
     @Autowired
     CuratorFramework curatorFramework;
 
@@ -44,26 +46,18 @@ public class ZkListenerInitial {
     private Environment env;
 
     public void init() throws Exception {
-
-        // 创建应用子节点
-        String appChildNode = BUUKLE_WJS_APP_PARENT_NODE + StringUtil.BACKSLASH + env.getProperty("spring.application.name")+ StringUtil.UNDERLINE + SystemUtil.ipPid();
-        curatorFramework.create().creatingParentsIfNeeded().forPath(appChildNode, "0".getBytes());
-        // 查询应用子节点
-        List<String> appChildrenNode = curatorFramework.getChildren().forPath(BUUKLE_WJS_APP_PARENT_NODE);
+        String appParentNode = BUUKLE_WJS_APP_PARENT_NODE + StringUtil.BACKSLASH + env.getProperty("spring.application.name");
+        ZkOperator.createAndInitParentsIfNeeded(curatorFramework,appParentNode + StringUtil.BACKSLASH + SystemUtil.ipPid(),"0".getBytes());
+        List<String> appChildrenNode = ZkOperator.getChildren(curatorFramework,appParentNode);
         if(!CollectionUtils.isEmpty(appChildrenNode)){
-            LOGGER.info("当前有以下节点连接到zk : ");
-            for (String appNode: appChildrenNode) {
-                LOGGER.info("buukle.wjs.plugin.zk.app.child ----->  :{}",appNode);
+            LOGGER.info("当前应用有以下子节点连接到 zk 父节点 :{} : ",appParentNode);
+            for (String child: appChildrenNode) {
+                LOGGER.info("父节点: {} 下的子节点 : {}",appParentNode,child);
             }
         }
-        // 订阅应用父节点
-        ZkOperator.subscribe(curatorFramework,new ApplicationListener(BUUKLE_WJS_APP_PARENT_NODE));
-
-        // 创建任务父节点
-        String applicationJobNode = BUUKLE_WJS_JOB_PARENT_NODE;
-
-        // 订阅任务父节点
-        String jobPath = "/buukle.zk.wjs" + "/" + env.getProperty("spring.application.name") + ".job" + "/" + SystemUtil.ipPid();
-        ZkOperator.subscribe(curatorFramework,new WorkerJobListener(jobPath));
+        ZkOperator.subscribe(curatorFramework,new ApplicationListener(appParentNode));
+        ZkOperator.createAndInitParentsIfNeeded(curatorFramework,BUUKLE_WJS_JOB_PARENT_NODE,"0".getBytes());
+        ZkOperator.subscribe(curatorFramework,new WorkerJobListener(BUUKLE_WJS_JOB_PARENT_NODE));
+        ZkOperator.leaderLatch(curatorFramework,BUUKLE_WJS_LEADER_NODE, null);
     }
 }

@@ -15,6 +15,7 @@ import top.buukle.util.JsonUtil;
 import top.buukle.util.log.BaseLogger;
 import top.buukle.wjs.entity.WorkerJob;
 import top.buukle.wjs.plugin.quartz.quartzJobBean.JobBean;
+import top.buukle.wjs.plugin.zk.ZkOperator;
 
 /**
  * @description 〈〉
@@ -38,7 +39,7 @@ public class QuartzOperator {
     public static void createJob(WorkerJob workerJob, Scheduler scheduler) throws SchedulerException {
 
         LOGGER.info("创建定时任务参数 workerJob:{}", JsonUtil.toJSONString(workerJob));
-        //构建job信息
+        // 构建job信息
         JobDetail jobDetail = JobBuilder.newJob(JobBean.class).withIdentity(workerJob.getId()+"").build();
         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(workerJob.getCronExpression()).withMisfireHandlingInstructionFireAndProceed();
         CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(workerJob.getId()+"").withSchedule(scheduleBuilder).build();
