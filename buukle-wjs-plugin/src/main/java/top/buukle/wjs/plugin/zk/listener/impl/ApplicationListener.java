@@ -12,9 +12,11 @@ package top.buukle.wjs.plugin.zk.listener.impl;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.TreeCacheEvent;
+import top.buukle.util.StringUtil;
+import top.buukle.util.log.BaseLogger;
+import top.buukle.wjs.plugin.zk.ZkOperator;
+import top.buukle.wjs.plugin.zk.constants.ZkConstants;
 import top.buukle.wjs.plugin.zk.listener.ZkAbstractListener;
-
-import java.util.List;
 
 /**
  * @description 〈应用订阅监听〉
@@ -24,44 +26,37 @@ import java.util.List;
  */
 public class ApplicationListener extends ZkAbstractListener {
 
-
-    public ApplicationListener(String appPath) {
-        super(appPath);
+    private static final BaseLogger LOGGER =  BaseLogger.getLogger(ApplicationListener.class);
+    public ApplicationListener(String appPath, String applicationName) {
+        super(appPath,applicationName);
     }
 
     @Override
     public void childEvent(CuratorFramework curatorFramework, TreeCacheEvent treeCacheEvent) throws Exception {
-//        if(null == treeCacheEvent){
-//            LOGGER.info("treeCacheEvent为null");
-//            return;
-//        }
-//        TreeCacheEvent.Type eventType = treeCacheEvent.getType();
-//        switch (eventType) {
-//            case INITIALIZED:
-//            case NODE_ADDED:
-//                break;
-//            case NODE_REMOVED:
-//                //移除的节点不是领导节点，有当前领导节点执行重新分片
-//                if("1".equals(LocalCacheUtils.shardCache.get(Constants.IS_LEADER))){
-//                    shardService.resetShards();
-//                }
-//                break;
-//            case CONNECTION_SUSPENDED:
-//            case CONNECTION_LOST:
-//                log.info("临时节点【{}】失去连接。。。",treeCacheEvent.getData().getPath());
-//                LocalCacheUtils.shardCache.put(Constants.CACHE_SHARD_NO,"0");
-//                LocalCacheUtils.shardCache.put(Constants.CACHE_TOTAL_SHARD,"0");
-//                break;
-//            default:
-//                if(treeCacheEvent.getData().getPath().indexOf(SystemUtil.ip_pid())>0){
-//                    List<String> ips = zookeeperClient.getChildren(Constants.ZK_SESSION_NODE);
-//                    int totalShard = ips!=null ?ips.size():0;
-//                    LocalCacheUtils.shardCache.put(Constants.CACHE_TOTAL_SHARD, String.valueOf(totalShard));
-//                    LocalCacheUtils.shardCache.put(Constants.CACHE_SHARD_NO,new String(treeCacheEvent.getData().getData()));
-//                    log.info("分片序号发生变化，变化后的值为：{}",LocalCacheUtils.shardCache.get(Constants.CACHE_SHARD_NO));
-//                }else{
-//                    log.info("别的服务分片序号发生改变，path:{}",treeCacheEvent.getData().getPath());
-//                }
-//        }
+        if(null == treeCacheEvent){
+            LOGGER.info("treeCacheEvent为null");
+            return;
+        }
+        TreeCacheEvent.Type eventType = treeCacheEvent.getType();
+        switch (eventType) {
+            case INITIALIZED:
+                ZkOperator.reSharded(curatorFramework, ZkConstants.BUUKLE_WJS_APP_PARENT_NODE + StringUtil.BACKSLASH + super.getApplicationName());
+                break;
+            case NODE_ADDED:
+                LOGGER.info("子节点 : {} 新增...",treeCacheEvent.getData().getPath());
+                ZkOperator.reSharded(curatorFramework, ZkConstants.BUUKLE_WJS_APP_PARENT_NODE + StringUtil.BACKSLASH + super.getApplicationName());
+                break;
+            case NODE_REMOVED:
+                LOGGER.info("子节点 : {} 移除...",treeCacheEvent.getData().getPath());
+                ZkOperator.reSharded(curatorFramework, ZkConstants.BUUKLE_WJS_APP_PARENT_NODE + StringUtil.BACKSLASH + super.getApplicationName());
+                break;
+            case CONNECTION_SUSPENDED:
+            case CONNECTION_LOST:
+                LOGGER.info("子节点 : {} 失去连接...",treeCacheEvent.getData().getPath());
+                ZkOperator.reSharded(curatorFramework, ZkConstants.BUUKLE_WJS_APP_PARENT_NODE + StringUtil.BACKSLASH + super.getApplicationName());
+                break;
+            default:
+                break;
+        }
     }
 }

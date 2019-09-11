@@ -14,7 +14,13 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.TreeCache;
 import org.apache.curator.framework.recipes.leader.LeaderLatch;
 import org.apache.curator.framework.recipes.leader.LeaderLatchListener;
+import org.apache.zookeeper.data.Stat;
+import org.springframework.util.CollectionUtils;
+import top.buukle.util.StringUtil;
+import top.buukle.util.SystemUtil;
 import top.buukle.util.log.BaseLogger;
+import top.buukle.wjs.plugin.zk.cache.ZkCache;
+import top.buukle.wjs.plugin.zk.constants.ZkConstants;
 import top.buukle.wjs.plugin.zk.listener.ZkAbstractListener;
 
 import java.util.List;
@@ -91,6 +97,14 @@ public class ZkOperator {
             @Override
             public void isLeader() {
                 LOGGER.info("当前应用当选为主节点!路径 :{}",path);
+                ZkCache.LEADER_CACHE = true;
+                // 重新分片
+                try {
+                    reSharded(curatorFramework, path);
+                } catch (Exception e) {
+                    LOGGER.info("重新分片出现异常,原因 :{}",e.getMessage());
+                    e.printStackTrace();
+                }
             }
             @Override
             public void notLeader() {
@@ -98,5 +112,42 @@ public class ZkOperator {
         });
         leaderLatchList.add(leaderLatch);
         leaderLatch.start();
+    }
+
+    /**
+     * @description 重新分片
+     * @param curatorFramework
+     * @param path
+     * @return void
+     * @Author elvin
+     * @Date 2019/9/11
+     */
+    public static void reSharded(CuratorFramework curatorFramework, String path) throws Exception {
+        LOGGER.info("节点 : {} 开始重新分片... ",path);
+        if(ZkCache.LEADER_CACHE){
+            List<String> children =  getChildren(curatorFramework,path);
+            if(CollectionUtils.isEmpty(children)){
+                LOGGER.info("节点 : {} 重新分片完成,没有找到有效子节点! ",path);
+            }
+            int shardId = 1;
+            for (String child : children) {
+                setData(curatorFramework,child,(shardId+StringUtil.EMPTY).getBytes());
+                shardId ++;
+            }
+        }
+        LOGGER.info("节点 : {} 重新分片完成... ",path);
+    }
+
+    /**
+     * @description 更新节点数据
+     * @param curatorFramework
+     * @param child
+     * @param data
+     * @return void
+     * @Author elvin
+     * @Date 2019/9/12
+     */
+    private static void setData(CuratorFramework curatorFramework, String child, byte[] data) throws Exception {
+        curatorFramework.setData().forPath(child, data);
     }
 }

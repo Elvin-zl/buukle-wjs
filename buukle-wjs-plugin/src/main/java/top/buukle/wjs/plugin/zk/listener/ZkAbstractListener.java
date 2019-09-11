@@ -21,9 +21,11 @@ import org.apache.curator.framework.recipes.cache.TreeCacheListener;
 public abstract class ZkAbstractListener implements TreeCacheListener {
 
     private String path;
+    private String applicationName;
 
-    public ZkAbstractListener(String path) {
+    public ZkAbstractListener(String path,String applicationName) {
         this.path = path;
+        this.applicationName = applicationName;
     }
 
     public String getPath() {
@@ -32,5 +34,13 @@ public abstract class ZkAbstractListener implements TreeCacheListener {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
     }
 }

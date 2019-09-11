@@ -18,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 import top.buukle.util.StringUtil;
 import top.buukle.util.SystemUtil;
 import top.buukle.util.log.BaseLogger;
+import top.buukle.wjs.plugin.zk.constants.ZkConstants;
 import top.buukle.wjs.plugin.zk.listener.impl.ApplicationListener;
 import top.buukle.wjs.plugin.zk.listener.impl.WorkerJobListener;
 
@@ -33,12 +34,9 @@ import java.util.List;
 public class ZkListenerInitial {
 
     private static final BaseLogger LOGGER =  BaseLogger.getLogger(ZkListenerInitial.class);
-    /** 应用父节点*/
-    private static final String BUUKLE_WJS_APP_PARENT_NODE = "/buukle.wjs.app.parent";
-    /** 任务父节点*/
-    private static final String BUUKLE_WJS_JOB_PARENT_NODE = "/buukle.wjs.job.parent";
-    /** 应用领导节点*/
-    private static final String BUUKLE_WJS_LEADER_NODE = "/buukle.wjs.leader";
+
+    private static final byte[] INIT_ZK_VALUE = "0".getBytes();
+
     @Autowired
     CuratorFramework curatorFramework;
 
@@ -46,8 +44,17 @@ public class ZkListenerInitial {
     private Environment env;
 
     public void init() throws Exception {
-        String appParentNode = BUUKLE_WJS_APP_PARENT_NODE + StringUtil.BACKSLASH + env.getProperty("spring.application.name");
-        ZkOperator.createAndInitParentsIfNeeded(curatorFramework,appParentNode + StringUtil.BACKSLASH + SystemUtil.ipPid(),"0".getBytes());
+        // 声明应用父节点
+        String appParentNode = ZkConstants.BUUKLE_WJS_APP_PARENT_NODE + StringUtil.BACKSLASH + env.getProperty("spring.application.name");
+        // 尝试创建应用父节点
+        ZkOperator.createAndInitParentsIfNeeded(curatorFramework,appParentNode,INIT_ZK_VALUE);
+        // 开启自动选举
+        ZkOperator.leaderLatch(curatorFramework,appParentNode, null);
+        // 订阅应用父节点
+        ZkOperator.subscribe(curatorFramework,new ApplicationListener(appParentNode,env.getProperty("spring.application.name")));
+        // 创建应用子节点
+        ZkOperator.createAndInitParentsIfNeeded(curatorFramework,appParentNode + StringUtil.BACKSLASH + SystemUtil.ipPid(),INIT_ZK_VALUE);
+        // 查询应用子节点
         List<String> appChildrenNode = ZkOperator.getChildren(curatorFramework,appParentNode);
         if(!CollectionUtils.isEmpty(appChildrenNode)){
             LOGGER.info("当前应用有以下子节点连接到 zk 父节点 :{} : ",appParentNode);
@@ -55,9 +62,9 @@ public class ZkListenerInitial {
                 LOGGER.info("父节点: {} 下的子节点 : {}",appParentNode,child);
             }
         }
-        ZkOperator.subscribe(curatorFramework,new ApplicationListener(appParentNode));
-        ZkOperator.createAndInitParentsIfNeeded(curatorFramework,BUUKLE_WJS_JOB_PARENT_NODE,"0".getBytes());
-        ZkOperator.subscribe(curatorFramework,new WorkerJobListener(BUUKLE_WJS_JOB_PARENT_NODE));
-        ZkOperator.leaderLatch(curatorFramework,BUUKLE_WJS_LEADER_NODE, null);
+        // 尝试创建任务父节点
+        ZkOperator.createAndInitParentsIfNeeded(curatorFramework,ZkConstants.BUUKLE_WJS_JOB_PARENT_NODE,INIT_ZK_VALUE);
+        // 订阅任务父节点
+        ZkOperator.subscribe(curatorFramework,new WorkerJobListener(ZkConstants.BUUKLE_WJS_JOB_PARENT_NODE,env.getProperty("spring.application.name")));
     }
 }
