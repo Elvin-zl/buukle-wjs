@@ -7,25 +7,25 @@ import java.util.List;
 public class WorkerJobExample {
     /**
      *
-     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
+     * @mbg.generated Thu Nov 28 21:27:15 CST 2019
      */
     protected String orderByClause;
 
     /**
      *
-     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
+     * @mbg.generated Thu Nov 28 21:27:15 CST 2019
      */
     protected boolean distinct;
 
     /**
      *
-     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
+     * @mbg.generated Thu Nov 28 21:27:15 CST 2019
      */
     protected List<Criteria> oredCriteria;
 
     /**
      *
-     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
+     * @mbg.generated Thu Nov 28 21:27:15 CST 2019
      */
     public WorkerJobExample() {
         oredCriteria = new ArrayList<Criteria>();
@@ -33,7 +33,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
+     * @mbg.generated Thu Nov 28 21:27:15 CST 2019
      */
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
@@ -41,7 +41,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
+     * @mbg.generated Thu Nov 28 21:27:15 CST 2019
      */
     public String getOrderByClause() {
         return orderByClause;
@@ -49,7 +49,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
+     * @mbg.generated Thu Nov 28 21:27:15 CST 2019
      */
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
@@ -57,7 +57,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
+     * @mbg.generated Thu Nov 28 21:27:15 CST 2019
      */
     public boolean isDistinct() {
         return distinct;
@@ -65,7 +65,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
+     * @mbg.generated Thu Nov 28 21:27:15 CST 2019
      */
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
@@ -73,7 +73,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
+     * @mbg.generated Thu Nov 28 21:27:15 CST 2019
      */
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
@@ -81,7 +81,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
+     * @mbg.generated Thu Nov 28 21:27:15 CST 2019
      */
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
@@ -91,7 +91,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
+     * @mbg.generated Thu Nov 28 21:27:15 CST 2019
      */
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
@@ -103,7 +103,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
+     * @mbg.generated Thu Nov 28 21:27:15 CST 2019
      */
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
@@ -112,7 +112,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
+     * @mbg.generated Thu Nov 28 21:27:15 CST 2019
      */
     public void clear() {
         oredCriteria.clear();
@@ -122,7 +122,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
+     * @mbg.generated Thu Nov 28 21:27:15 CST 2019
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -1082,6 +1082,66 @@ public class WorkerJobExample {
 
         public Criteria andFailStrategyNotBetween(String value1, String value2) {
             addCriterion("fail_strategy not between", value1, value2, "failStrategy");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetryLimitIsNull() {
+            addCriterion("retry_limit is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetryLimitIsNotNull() {
+            addCriterion("retry_limit is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetryLimitEqualTo(Integer value) {
+            addCriterion("retry_limit =", value, "retryLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetryLimitNotEqualTo(Integer value) {
+            addCriterion("retry_limit <>", value, "retryLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetryLimitGreaterThan(Integer value) {
+            addCriterion("retry_limit >", value, "retryLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetryLimitGreaterThanOrEqualTo(Integer value) {
+            addCriterion("retry_limit >=", value, "retryLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetryLimitLessThan(Integer value) {
+            addCriterion("retry_limit <", value, "retryLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetryLimitLessThanOrEqualTo(Integer value) {
+            addCriterion("retry_limit <=", value, "retryLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetryLimitIn(List<Integer> values) {
+            addCriterion("retry_limit in", values, "retryLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetryLimitNotIn(List<Integer> values) {
+            addCriterion("retry_limit not in", values, "retryLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetryLimitBetween(Integer value1, Integer value2) {
+            addCriterion("retry_limit between", value1, value2, "retryLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetryLimitNotBetween(Integer value1, Integer value2) {
+            addCriterion("retry_limit not between", value1, value2, "retryLimit");
             return (Criteria) this;
         }
 
@@ -2178,7 +2238,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated do_not_delete_during_merge Mon Sep 09 22:03:37 CST 2019
+     * @mbg.generated do_not_delete_during_merge Thu Nov 28 21:27:15 CST 2019
      */
     public static class Criteria extends GeneratedCriteria {
 
@@ -2189,7 +2249,7 @@ public class WorkerJobExample {
 
     /**
      *
-     * @mbg.generated Mon Sep 09 22:03:37 CST 2019
+     * @mbg.generated Thu Nov 28 21:27:15 CST 2019
      */
     public static class Criterion {
         private String condition;

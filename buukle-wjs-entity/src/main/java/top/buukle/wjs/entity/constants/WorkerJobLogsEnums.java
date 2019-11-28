@@ -1,10 +1,10 @@
-package top.buukle.wjs .service.constants;
+package top.buukle.wjs .entity.constants;
 
 /**
  * @Author: elvin
  * @Date: 2019/7/28/028 3:56
  */
-public class WorkerJobEnums {
+public class WorkerJobLogsEnums {
 
     public enum status {
 

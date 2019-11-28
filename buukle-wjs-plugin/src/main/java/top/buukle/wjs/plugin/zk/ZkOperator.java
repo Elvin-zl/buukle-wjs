@@ -1,5 +1,5 @@
 /**
- * Copyright (C), 2015-2019  http://www.jd.com
+ * Copyright (C), 2015-2019  http://www.buukle.top
  * FileName: ZkUtil
  * Author:   zhanglei1102
  * Date:     2019/9/9 22:52
@@ -14,13 +14,11 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.TreeCache;
 import org.apache.curator.framework.recipes.leader.LeaderLatch;
 import org.apache.curator.framework.recipes.leader.LeaderLatchListener;
-import org.apache.zookeeper.data.Stat;
+import org.apache.zookeeper.CreateMode;
 import org.springframework.util.CollectionUtils;
 import top.buukle.util.StringUtil;
-import top.buukle.util.SystemUtil;
 import top.buukle.util.log.BaseLogger;
 import top.buukle.wjs.plugin.zk.cache.ZkCache;
-import top.buukle.wjs.plugin.zk.constants.ZkConstants;
 import top.buukle.wjs.plugin.zk.listener.ZkAbstractListener;
 
 import java.util.List;
@@ -44,8 +42,11 @@ public class ZkOperator {
      * @Author zhanglei1102
      * @Date 2019/9/11
      */
-    public static void createAndInitParentsIfNeeded(CuratorFramework curatorFramework, String path, byte[] bytes) throws Exception {
-        curatorFramework.create().creatingParentsIfNeeded().forPath(path, "0".getBytes());
+    public static void createAndInitParentsIfNeededEphemeral(CuratorFramework curatorFramework, String path, byte[] bytes) throws Exception {
+        curatorFramework.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL).forPath(path, bytes);
+    }
+    public static void createAndInitParentsIfNeededPersistent(CuratorFramework curatorFramework, String path, byte[] bytes) throws Exception {
+        curatorFramework.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(path, bytes);
     }
 
     /**
@@ -56,7 +57,7 @@ public class ZkOperator {
      * @Author zhanglei1102
      * @Date 2019/9/9
      */
-    public static void subscribe(CuratorFramework curatorFramework, ZkAbstractListener zkListener) throws Exception {
+    public static void subscribe(CuratorFramework curatorFramework, ZkAbstractListener zkListener)  {
         LOGGER.info("准备订阅节点 : {}",zkListener.getPath());
        try{
            TreeCache treeCache = new TreeCache(curatorFramework, zkListener.getPath());
@@ -124,16 +125,19 @@ public class ZkOperator {
      */
     public static void reSharded(CuratorFramework curatorFramework, String path) throws Exception {
         LOGGER.info("节点 : {} 开始重新分片... ",path);
-        if(ZkCache.LEADER_CACHE){
-            List<String> children =  getChildren(curatorFramework,path);
-            if(CollectionUtils.isEmpty(children)){
-                LOGGER.info("节点 : {} 重新分片完成,没有找到有效子节点! ",path);
+        List<String> children =  getChildren(curatorFramework,path);
+        if(CollectionUtils.isEmpty(children)){
+            LOGGER.info("节点 : {} 重新分片完成,没有找到有效子节点! ",path);
+        }
+        int shardId = 1;
+        for (String childPath : children) {
+            try{
+                setData(curatorFramework,path + "/" + childPath,(shardId+StringUtil.EMPTY).getBytes());
+                LOGGER.info("节点 : {} 下子节点 {} 重新分片完成! ",path,childPath);
+            }catch (Exception e){
+                LOGGER.info("节点 : {} 下子节点 {} 重新分片完成,分片索引无变化! ",path,childPath);
             }
-            int shardId = 1;
-            for (String child : children) {
-                setData(curatorFramework,child,(shardId+StringUtil.EMPTY).getBytes());
-                shardId ++;
-            }
+            shardId ++;
         }
         LOGGER.info("节点 : {} 重新分片完成... ",path);
     }
@@ -141,13 +145,56 @@ public class ZkOperator {
     /**
      * @description 更新节点数据
      * @param curatorFramework
-     * @param child
+     * @param path
      * @param data
      * @return void
      * @Author elvin
      * @Date 2019/9/12
      */
-    private static void setData(CuratorFramework curatorFramework, String child, byte[] data) throws Exception {
-        curatorFramework.setData().forPath(child, data);
+    private static void setData(CuratorFramework curatorFramework, String path, byte[] data) throws Exception {
+        curatorFramework.setData().forPath(path, data);
     }
+
+
+    /**
+     * @description 检验是否存在
+     * @param curatorFramework
+     * @param path
+     * @return boolean
+     * @Author zhanglei1102
+     * @Date 2019/11/29
+     */
+    public static boolean checkExists(CuratorFramework curatorFramework, String path) throws Exception {
+        return null != curatorFramework.checkExists().forPath(path);
+    }
+
+    /**
+     * @description 重新创建临时节点
+     * @param curatorFramework
+     * @param path
+     * @param v
+     * @return void
+     * @Author zhanglei1102
+     * @Date 2019/11/29
+     */
+    public static void persistEphemeral(CuratorFramework curatorFramework, String path, byte[] v) throws Exception {
+        if(checkExists(curatorFramework,path)){
+            curatorFramework.delete().deletingChildrenIfNeeded().forPath(path);
+        }
+        createAndInitParentsIfNeededEphemeral(curatorFramework,path,v);
+    }
+
+    /**
+     * @description 获取数据
+     * @param curatorFramework
+     * @param path
+     * @return java.lang.String
+     * @Author zhanglei1102
+     * @Date 2019/11/29
+     */
+    public static String getData(CuratorFramework curatorFramework, String path) throws Exception {
+        byte[] bytes = curatorFramework.getData().forPath(path);
+        return bytes == null ? null : new String(bytes);
+    }
+
 }

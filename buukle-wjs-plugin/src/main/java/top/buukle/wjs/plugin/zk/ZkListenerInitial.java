@@ -1,5 +1,5 @@
 /**
- * Copyright (C), 2015-2019  http://www.jd.com
+ * Copyright (C), 2015-2019  http://www.buukle.top
  * FileName: ZkInit
  * Author:   zhanglei1102
  * Date:     2019/9/9 22:44
@@ -20,7 +20,6 @@ import top.buukle.util.SystemUtil;
 import top.buukle.util.log.BaseLogger;
 import top.buukle.wjs.plugin.zk.constants.ZkConstants;
 import top.buukle.wjs.plugin.zk.listener.impl.ApplicationListener;
-import top.buukle.wjs.plugin.zk.listener.impl.WorkerJobListener;
 
 import java.util.List;
 
@@ -45,26 +44,28 @@ public class ZkListenerInitial {
 
     public void init() throws Exception {
         // 声明应用父节点
-        String appParentNode = ZkConstants.BUUKLE_WJS_APP_PARENT_NODE + StringUtil.BACKSLASH + env.getProperty("spring.application.name");
-        // 尝试创建应用父节点
-        ZkOperator.createAndInitParentsIfNeeded(curatorFramework,appParentNode,INIT_ZK_VALUE);
-        // 开启自动选举
-        ZkOperator.leaderLatch(curatorFramework,appParentNode, null);
-        // 订阅应用父节点
-        ZkOperator.subscribe(curatorFramework,new ApplicationListener(appParentNode,env.getProperty("spring.application.name")));
-        // 创建应用子节点
-        ZkOperator.createAndInitParentsIfNeeded(curatorFramework,appParentNode + StringUtil.BACKSLASH + SystemUtil.ipPid(),INIT_ZK_VALUE);
-        // 查询应用子节点
-        List<String> appChildrenNode = ZkOperator.getChildren(curatorFramework,appParentNode);
-        if(!CollectionUtils.isEmpty(appChildrenNode)){
-            LOGGER.info("当前应用有以下子节点连接到 zk 父节点 :{} : ",appParentNode);
-            for (String child: appChildrenNode) {
-                LOGGER.info("父节点: {} 下的子节点 : {}",appParentNode,child);
+        String appParentPath = ZkConstants.BUUKLE_WJS_APP_PARENT_NODE + StringUtil.BACKSLASH + env.getProperty("spring.application.name");
+        // 不存在则创建父节点
+        if(!ZkOperator.checkExists(curatorFramework,appParentPath)){
+            try{
+                ZkOperator.createAndInitParentsIfNeededPersistent(curatorFramework,appParentPath,INIT_ZK_VALUE);
+            }catch (Exception e){
+                LOGGER.info("创建应用父节点时出现异常!原因 :{}" , e.getMessage());
             }
         }
-        // 尝试创建任务父节点
-        ZkOperator.createAndInitParentsIfNeeded(curatorFramework,ZkConstants.BUUKLE_WJS_JOB_PARENT_NODE,INIT_ZK_VALUE);
-        // 订阅任务父节点
-        ZkOperator.subscribe(curatorFramework,new WorkerJobListener(ZkConstants.BUUKLE_WJS_JOB_PARENT_NODE,env.getProperty("spring.application.name")));
+        // 订阅应用父节点
+        ZkOperator.subscribe(curatorFramework,new ApplicationListener(appParentPath,env.getProperty("spring.application.name")));
+        // 开启自动选举
+        ZkOperator.leaderLatch(curatorFramework,appParentPath, null);
+        // 强制重新创建应用子节点
+        ZkOperator.persistEphemeral(curatorFramework,appParentPath + StringUtil.BACKSLASH + SystemUtil.ipPid(),INIT_ZK_VALUE);
+        // 查询应用子节点
+        List<String> appChildrenNode = ZkOperator.getChildren(curatorFramework,appParentPath);
+        if(!CollectionUtils.isEmpty(appChildrenNode)){
+            LOGGER.info("当前应用有以下子节点连接到 zk 父节点 :{} : ",appParentPath);
+            for (String child: appChildrenNode) {
+                LOGGER.info("父节点: {} 下的子节点 : {}",appParentPath,child);
+            }
+        }
     }
 }

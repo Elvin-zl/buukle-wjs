@@ -19,7 +19,7 @@ import top.buukle.wjs .entity.vo.WorkerJobQuery;
 import top.buukle.security.plugin.util.SessionUtil;
 import top.buukle.wjs .service.WorkerJobService;
 import top.buukle.wjs .service.constants.SystemReturnEnum;
-import top.buukle.wjs .service.constants.WorkerJobEnums;
+import top.buukle.wjs.entity.constants.WorkerJobEnums;
 import top.buukle.wjs .service.exception.SystemException;
 import top.buukle.wjs .service.util.ConvertHumpUtil;
 import top.buukle.util.DateUtil;
