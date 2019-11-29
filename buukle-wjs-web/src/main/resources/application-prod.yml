@@ -1,6 +1,6 @@
 ##服务配置
 server:
-  port: 9191
+  port: 9494
   tomcat:
     max-threads: 800
     uri-encoding: utf-8
@@ -11,7 +11,7 @@ logging:
 spring:
   ##引入
   profiles:
-    include: prod-security
+    include: prod-security,prod-wjs
   ##应用名
   application:
       name: buukle-wjs

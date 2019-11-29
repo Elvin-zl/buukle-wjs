@@ -12,7 +12,7 @@ package top.buukle.wjs.plugin.quartz.quartzJobBean.threadpool;
 
 import org.springframework.core.env.Environment;
 import top.buukle.common.call.CommonRequest;
-import top.buukle.util.ReflectUtil;
+import top.buukle.util.ReflectUtils;
 import top.buukle.util.SpringContextUtil;
 import top.buukle.util.StringUtil;
 import top.buukle.util.log.BaseLogger;
@@ -56,7 +56,7 @@ public  class JobRunnable extends WorkerJob implements Runnable{
         }
         // 执行任务
         try {
-            ReflectUtil.invoke(this.getBeanReferenceName(),this.getMethod(),String.class);
+            ReflectUtils.invoke(this.getBeanReferenceName(),this.getMethod(),String.class);
         } catch (Exception e) {
             e.printStackTrace();
             // 快速失败
@@ -72,7 +72,7 @@ public  class JobRunnable extends WorkerJob implements Runnable{
             WorkerJob workerJob = new WorkerJob();
             workerJob.setId(this.getId());
             commonRequest.setBody(workerJob);
-            invoker.retryCountIncrease(commonRequest);
+            invoker.increaseRetryCountWorkerJob(commonRequest);
         }
     }
 

@@ -39,8 +39,6 @@ public class ThreadPoolConfigure {
     @Autowired
     private Environment env;
 
-    @Autowired
-    private ThreadPoolDefaultRejectPolicy defaultThreadPoolRejectPolicy ;
 
     /**
      * @description 初始化处理任务所用线程池
@@ -56,7 +54,7 @@ public class ThreadPoolConfigure {
         threadPoolTaskExecutor.setMaxPoolSize(Integer.parseInt(StringUtil.isEmpty(env.getProperty(TASK_EXECUTOR_MAX_POOL_SIZE_KEY))? "" : "20"));
         threadPoolTaskExecutor.setQueueCapacity(Integer.parseInt(StringUtil.isEmpty(env.getProperty(TASK_EXECUTOR_QUEUE_CAPACITY_KEY))? "" : "500"));
         threadPoolTaskExecutor.setKeepAliveSeconds(Integer.parseInt(StringUtil.isEmpty(env.getProperty(TASK_EXECUTOR_KEEP_ALIVE_SECONDS_KEY))? "" : "30"));
-        threadPoolTaskExecutor.setRejectedExecutionHandler(null == defaultThreadPoolRejectPolicy ?  new ThreadPoolDefaultRejectPolicy() :defaultThreadPoolRejectPolicy);
+        threadPoolTaskExecutor.setRejectedExecutionHandler(new ThreadPoolDefaultRejectPolicy());
         return threadPoolTaskExecutor;
     }
 }

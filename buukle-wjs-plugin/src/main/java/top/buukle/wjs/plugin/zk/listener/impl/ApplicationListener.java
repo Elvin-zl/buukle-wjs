@@ -19,7 +19,7 @@ import top.buukle.wjs.plugin.zk.constants.ZkConstants;
 import top.buukle.wjs.plugin.zk.listener.ZkAbstractListener;
 
 /**
- * @description 〈应用订阅监听〉
+ * @description 〈应用监听器〉
  * @author zhanglei1102
  * @create 2019/9/9
  * @since 1.0.0
@@ -27,6 +27,7 @@ import top.buukle.wjs.plugin.zk.listener.ZkAbstractListener;
 public class ApplicationListener extends ZkAbstractListener {
 
     private static final BaseLogger LOGGER =  BaseLogger.getLogger(ApplicationListener.class);
+
     public ApplicationListener(String appPath, String applicationName) {
         super(appPath,applicationName);
     }
@@ -40,20 +41,20 @@ public class ApplicationListener extends ZkAbstractListener {
         TreeCacheEvent.Type eventType = treeCacheEvent.getType();
         switch (eventType) {
             case INITIALIZED:
-                ZkOperator.reSharded(curatorFramework, ZkConstants.BUUKLE_WJS_APP_PARENT_NODE + StringUtil.BACKSLASH + super.getApplicationName());
+                ZkOperator.reSharded(curatorFramework, ZkConstants.BUUKLE_WJS_APP_PARENT_NODE);
                 break;
             case NODE_ADDED:
                 LOGGER.info("子节点 : {} 新增...",treeCacheEvent.getData().getPath());
-                ZkOperator.reSharded(curatorFramework, ZkConstants.BUUKLE_WJS_APP_PARENT_NODE + StringUtil.BACKSLASH + super.getApplicationName());
+                ZkOperator.reSharded(curatorFramework, ZkConstants.BUUKLE_WJS_APP_PARENT_NODE);
                 break;
             case NODE_REMOVED:
                 LOGGER.info("子节点 : {} 移除...",treeCacheEvent.getData().getPath());
-                ZkOperator.reSharded(curatorFramework, ZkConstants.BUUKLE_WJS_APP_PARENT_NODE + StringUtil.BACKSLASH + super.getApplicationName());
+                ZkOperator.reSharded(curatorFramework, ZkConstants.BUUKLE_WJS_APP_PARENT_NODE);
                 break;
             case CONNECTION_SUSPENDED:
             case CONNECTION_LOST:
                 LOGGER.info("子节点 : {} 失去连接...",treeCacheEvent.getData().getPath());
-                ZkOperator.reSharded(curatorFramework, ZkConstants.BUUKLE_WJS_APP_PARENT_NODE + StringUtil.BACKSLASH + super.getApplicationName());
+                ZkOperator.reSharded(curatorFramework, ZkConstants.BUUKLE_WJS_APP_PARENT_NODE);
                 break;
             default:
                 break;

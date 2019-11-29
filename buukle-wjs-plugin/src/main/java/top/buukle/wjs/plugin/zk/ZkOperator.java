@@ -34,7 +34,7 @@ public class ZkOperator {
     private static BaseLogger LOGGER = BaseLogger.getLogger(ZkOperator.class);
 
     /**
-     * @description 创建节点
+     * @description 创建节点 (临时)
      * @param curatorFramework
      * @param path
      * @param bytes
@@ -45,6 +45,16 @@ public class ZkOperator {
     public static void createAndInitParentsIfNeededEphemeral(CuratorFramework curatorFramework, String path, byte[] bytes) throws Exception {
         curatorFramework.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL).forPath(path, bytes);
     }
+
+    /**
+     * @description 创建节点 (永久)
+     * @param curatorFramework
+     * @param path
+     * @param bytes
+     * @return void
+     * @Author zhanglei1102
+     * @Date 2019/11/29
+     */
     public static void createAndInitParentsIfNeededPersistent(CuratorFramework curatorFramework, String path, byte[] bytes) throws Exception {
         curatorFramework.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(path, bytes);
     }
@@ -111,7 +121,9 @@ public class ZkOperator {
             public void notLeader() {
             }
         });
-        leaderLatchList.add(leaderLatch);
+        if(!CollectionUtils.isEmpty(leaderLatchList)){
+            leaderLatchList.add(leaderLatch);
+        }
         leaderLatch.start();
     }
 

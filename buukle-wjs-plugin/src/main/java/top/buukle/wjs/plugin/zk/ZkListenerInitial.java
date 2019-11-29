@@ -20,6 +20,7 @@ import top.buukle.util.SystemUtil;
 import top.buukle.util.log.BaseLogger;
 import top.buukle.wjs.plugin.zk.constants.ZkConstants;
 import top.buukle.wjs.plugin.zk.listener.impl.ApplicationListener;
+import top.buukle.wjs.plugin.zk.listener.impl.JobListener;
 
 import java.util.List;
 
@@ -67,5 +68,17 @@ public class ZkListenerInitial {
                 LOGGER.info("父节点: {} 下的子节点 : {}",appParentPath,child);
             }
         }
+        // 声明任务父节点
+        String jobParentPath = ZkConstants.BUUKLE_WJS_JOB_PARENT_NODE + StringUtil.BACKSLASH + env.getProperty("spring.application.name");
+        // 不存在则创建父节点
+        if(!ZkOperator.checkExists(curatorFramework,jobParentPath)){
+            try{
+                ZkOperator.createAndInitParentsIfNeededPersistent(curatorFramework,jobParentPath,INIT_ZK_VALUE);
+            }catch (Exception e){
+                LOGGER.info("创建任务父节点时出现异常!原因 :{}" , e.getMessage());
+            }
+        }
+        // 订阅任务父节点
+        ZkOperator.subscribe(curatorFramework,new JobListener(jobParentPath,env.getProperty("spring.application.name")));
     }
 }

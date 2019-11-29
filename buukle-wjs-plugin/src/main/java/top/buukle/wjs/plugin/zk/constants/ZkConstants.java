@@ -19,5 +19,7 @@ package top.buukle.wjs.plugin.zk.constants;
 public class ZkConstants {
     /** 应用父节点*/
     public static final String BUUKLE_WJS_APP_PARENT_NODE = "/buukle.wjs.app.parent";
+    /** 任务父节点*/
+    public static final String BUUKLE_WJS_JOB_PARENT_NODE = "/buukle.wjs.job.parent";
 
 }

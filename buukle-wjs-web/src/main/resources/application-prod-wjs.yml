@@ -1,20 +1,30 @@
+spring:
+  ## zookeeper
+  zk:
+    host: 39.105.74.47:2181
+    baseSleepTimeMs: 1000
+    zkMaxRetries: 3
+  quartz:
+    startupDelay: 30
+    #相关属性配置
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: buukle.wjs.plugin.scheduler
+            instanceId: AUTO
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+
 ## wjs-plugin 相关配置
 wjs:
   server:
     ### wjs.server.name ,调用 wjs 的服务名称
     name: buukle-wjs
-    ### wjs.server.addApplicationJobURI ,调用 wjs 服务 addApplicationWorkerAndJob 资源的URI
-    addApplicationJobURI: /api/app/addApplicationJobURI
-    ### wjs.server.getApplicationJobURI ,调用 wjs 服务 getApplicationJobURI 资源的URI
-    getApplicationJobURI: /api/app/getApplicationJobURI
-  ### quartz 调度器配置
-  scheduler:
-    ### 调度器线程池类型
-    poolClass: org.quartz.simpl.SimpleThreadPool
-    ### 调度器线程池size
-    poolSize: 4
-    ### 调度器线程池心跳
-    priority: 5
+    islocal: 1
   ### quartz 执行任务的线程池配置
   pool:
     ### 线程池核心线程数
@@ -25,7 +35,5 @@ wjs:
     queueCapacity: 300
     ### 空闲活跃时间
     keepAliveSeconds: 30
-
-
 
 
