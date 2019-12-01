@@ -23,7 +23,6 @@
             <groupId>top.buukle</groupId>
             <artifactId>buukle-util</artifactId>
             <version>1.0.1.RELEASE</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
