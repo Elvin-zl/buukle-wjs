@@ -37,6 +37,7 @@ import top.buukle.wjs.plugin.zk.constants.ZkConstants;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -77,12 +78,12 @@ public class Initial implements ApplicationRunner {
             commonRequest.setBody(workerJobQuery);
             PageResponse response = this.getJobWithoutException(commonRequest);
             LOGGER.info("加载应用定时任务完成,内容 : {}", JsonUtil.toJSONString(response));
-            List<WorkerJob> list =  response.getBody() ==null? new ArrayList<>(): (List<WorkerJob>)response.getBody().getList();
+            List<LinkedHashMap> list =  response.getBody() ==null? new ArrayList<>(): (List<LinkedHashMap>)response.getBody().getList();
             if(CollectionUtils.isEmpty(list)){
                 LOGGER.info("查询任务列表为空,将进入重试!");
                 response = this.getJobWithoutNull(commonRequest);
             }
-            list = (List<WorkerJob>) response.getBody();
+            list = (List<LinkedHashMap>) response.getBody().getList();
             // 遍历创建定时任务,并加上监控
             try {
                 this.createJobs(list);
@@ -206,9 +207,10 @@ public class Initial implements ApplicationRunner {
      *
      *
      */
-    private void createJobs(List<WorkerJob> list) throws Exception {
+    private void createJobs(List<LinkedHashMap> list) throws Exception {
         String ip = SystemUtil.getIp();
-        for (WorkerJob workerJob : list) {
+        for (LinkedHashMap map  : list) {
+            WorkerJob workerJob = JsonUtil.parseObject(JsonUtil.toJSONString(map),WorkerJob.class);
             // 处理单条
             if(!this.handleOne(ip,workerJob)){
                 continue;
