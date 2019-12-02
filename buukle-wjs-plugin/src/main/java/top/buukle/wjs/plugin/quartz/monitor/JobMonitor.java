@@ -29,7 +29,7 @@ public class JobMonitor {
                     JobRunnable runnable = entry.getKey();
                     long interval = (System.currentTimeMillis() - runnable.getStartTime());
                     long timeOut = runnable.getTimeOut().equals(0) ? 10 : runnable.getTimeOut();
-                    if(interval > timeOut*1000){
+                    if(interval > timeOut * 1_000){
                         if(!entry.getValue().isDone()){
                             logger.error("线程超时将被取消，任务为:{}", JsonUtil.toJSONString(runnable));
                             try {
