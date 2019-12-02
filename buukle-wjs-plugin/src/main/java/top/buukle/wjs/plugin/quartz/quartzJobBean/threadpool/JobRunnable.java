@@ -50,7 +50,7 @@ public  class JobRunnable extends WorkerJob implements Runnable{
     public void run() {
         WorkerJobInvoker invoker = SpringContextUtil.getBean(WorkerJobInvoker.class);
         Environment env = SpringContextUtil.getBean(Environment.class);
-        if(StringUtil.isEmpty(this.getFailStrategy()) || (!this.getFailStrategy().equals(WorkerJobEnums.FailStrategy.QUICK_FAIL.getStrategy()) && !this.getFailStrategy().equals(WorkerJobEnums.FailStrategy.RETRY_CONTINUE.getStrategy()))){
+        if(StringUtil.isEmpty(this.getFailStrategy()) || (!this.getFailStrategy().equals(WorkerJobEnums.FailStrategy.QUICK_FAIL.getStrategy().toString()) && !this.getFailStrategy().equals(WorkerJobEnums.FailStrategy.RETRY_CONTINUE.getStrategy().toString()))){
             LOGGER.error("定时任务执行失败!,任务名称 : {},开始执行时间 :{},失败策略异常!" ,this.getBeanReferenceName(),this.getStartTime());
             this.fail(invoker,env,"失败,原因 : 失败策略异常!");
         }
@@ -60,10 +60,10 @@ public  class JobRunnable extends WorkerJob implements Runnable{
         } catch (Exception e) {
             e.printStackTrace();
             // 快速失败
-            if(this.getFailStrategy().equals(WorkerJobEnums.FailStrategy.QUICK_FAIL.getStrategy())){
+            if(this.getFailStrategy().equals(WorkerJobEnums.FailStrategy.QUICK_FAIL.getStrategy().toString())){
                 LOGGER.error("定时任务执行失败!任务名称 : {},开始执行时间 :{},失败策略 : 快速失败!" ,this.getBeanReferenceName(),this.getStartTime());
                 this.fail(invoker,env,"快速失败,原因 : " +e.getMessage());
-            }else if(this.getFailStrategy().equals(WorkerJobEnums.FailStrategy.RETRY_CONTINUE.getStrategy())){
+            }else if(this.getFailStrategy().equals(WorkerJobEnums.FailStrategy.RETRY_CONTINUE.getStrategy().toString())){
                 LOGGER.error("定时任务执行失败!任务名称 : {},开始执行时间 :{},失败策略 : 将进入重试!" ,this.getBeanReferenceName(),this.getStartTime());
             }
         }finally {
