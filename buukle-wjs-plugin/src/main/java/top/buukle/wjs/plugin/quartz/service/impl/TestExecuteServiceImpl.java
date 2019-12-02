@@ -8,9 +8,13 @@
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-package top.buukle.wjs.plugin.quartz;
+package top.buukle.wjs.plugin.quartz.service.impl;
 
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import top.buukle.common.call.CommonResponse;
 import top.buukle.util.log.BaseLogger;
+import top.buukle.wjs.plugin.quartz.service.ExecuteService;
 
 /**
  * @description 〈测试定时任务〉
@@ -18,15 +22,18 @@ import top.buukle.util.log.BaseLogger;
  * @create 2019/12/2
  * @since 1.0.0
  */
-public class QuartzTest {
+@Service
+public class TestExecuteServiceImpl implements ExecuteService {
 
-    private static final BaseLogger LOGGER = BaseLogger.getLogger(QuartzTest.class);
+    private static final BaseLogger LOGGER = BaseLogger.getLogger(TestExecuteServiceImpl.class);
 
-    public void test(String params) {
+    @Override
+    public CommonResponse execute(String params) {
         LOGGER.info("==================BUUKLE-WJS-PLUGIN-TEST=======================");
         LOGGER.info("测试任务执行开始...");
         LOGGER.info("测试任务执行参数 : {}",params);
         LOGGER.info("测试任务执行结束!");
         LOGGER.info("==================BUUKLE-WJS-PLUGIN-TEST=======================");
+        return new CommonResponse.Builder().buildSuccess();
     }
 }

@@ -15,6 +15,8 @@ public class WorkerJobEnums {
         PUBLISED(3,"审核通过"),
         BAN(4,"已被封禁"),
         FAILED(5,"执行失败"),
+        PAUSING(6,"暂停中"),
+        EXECUTING(7,"执行中"),
         ;
 
         private Integer status;

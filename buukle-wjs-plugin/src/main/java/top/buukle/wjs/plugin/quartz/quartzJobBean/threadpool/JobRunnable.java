@@ -12,13 +12,13 @@ package top.buukle.wjs.plugin.quartz.quartzJobBean.threadpool;
 
 import org.springframework.core.env.Environment;
 import top.buukle.common.call.CommonRequest;
-import top.buukle.util.ReflectUtils;
 import top.buukle.util.SpringContextUtil;
 import top.buukle.util.StringUtil;
 import top.buukle.util.log.BaseLogger;
 import top.buukle.wjs.entity.WorkerJob;
 import top.buukle.wjs.entity.constants.WorkerJobEnums;
 import top.buukle.wjs.plugin.invoker.WorkerJobInvoker;
+import top.buukle.wjs.plugin.quartz.service.ExecuteService;
 import top.buukle.wjs.plugin.quartz.monitor.JobMonitor;
 
 import java.util.concurrent.Future;
@@ -56,7 +56,7 @@ public  class JobRunnable extends WorkerJob implements Runnable{
         }
         // 执行任务
         try {
-            ReflectUtils.invoke(this.getBeanReferenceName(),this.getMethod(),String.class);
+            ((ExecuteService) SpringContextUtil.getBean(Class.forName(this.getBeanReferenceName()))).execute(this.getParams());
         } catch (Exception e) {
             e.printStackTrace();
             // 快速失败

@@ -32,17 +32,29 @@
 				<button th:case="0" class="layui-btn layui-btn-xs layui-btn-danger" > 初始化</button>
 				<button th:case="1" class="layui-btn layui-btn-xs layui-btn-normal" > 处理中</button>
 				<button th:case="2" class="layui-btn layui-btn-xs layui-btn-default"> 审核不通过</button>
-				<button th:case="3" class="layui-btn layui-btn-xs layui-btn-default"> 审核通过</button>
+				<button th:case="3" class="layui-btn layui-btn-xs layui-btn-green"> 审核通过</button>
 				<button th:case="4" class="layui-btn layui-btn-xs layui-btn-default"> 已被封禁</button>
+				<button th:case="5" class="layui-btn layui-btn-xs layui-btn-default"> 执行失败</button>
+				<button th:case="6" class="layui-btn layui-btn-xs layui-btn-default"> 已暂停</button>
+				<button th:case="7" class="layui-btn layui-btn-xs layui-btn-default"> 执行中</button>
 				<button th:case="*" class="layui-btn layui-btn-xs layui-btn-unknown"> 未知</button>
 			</td>
 			<td>
 				<div class="layui-inline">
+					<!--详情按钮-->
 					<hp url="/wjs/workerJob/workerJobCrudView">
 						<div class="layui-btn layui-btn-sm layui-btn-normal editBtn" th:attr="data-id = ${workerJobRecord?.id}" data-url="/wjs/workerJob/workerJobCrudView"><i class="layui-icon">&#xe642;</i></div>
 					</hp>
+					<!--删除按钮-->
 					<hp url="/wjs/workerJob/workerJobCrudJson">
 						<div class="layui-btn layui-btn-sm layui-btn-danger delOneBtn" th:attr="data-id = ${workerJobRecord?.id}" data-url="/wjs/workerJob/workerJobCrudJson"><i class="layui-icon">&#xe640;</i></div>
+                    </hp>
+					<!--暂停按钮-->
+					<hp url="/workerJob/pause">
+						<div class="layui-btn layui-btn-sm layui-btn-danger pauseOneBtn" th:attr="data-id = ${workerJobRecord?.id}" data-url="/workerJob/pause">
+							<i class="layui-icon" th:text="${workerJobRecord?.status ==6 ? '&#xe652;' : '&#xe651;'}" ></i>
+							<span th:attr="id = 'pauseOne-' + ${workerJobRecord?.id}" th:text="${workerJobRecord?.status ==6 ? '启动' : '暂停'}"> </span>
+						</div>
                     </hp>
 				</div>
 			</td>
@@ -52,5 +64,46 @@
 	<input type="hidden" id="totalPage" th:attr="value=${response?.body.totalPage}" />
 	<input type="hidden" id="total" th:attr="value=${response?.body.total}" />
 </table>
+<script>
+	layui.use(['dialog'], function() {
+		var dialog = layui.dialog;
+		bindUserDefine(dialog);
+	});
 
+	function bindUserDefine() {
+		// 绑定暂停按钮
+		$('.pauseOneBtn').off().on('click', function() {
+			var url=$(this).attr('data-url');
+			var userId=$(this).attr('data-userId');
+			url = url + "?id=" + $(this).attr('data-id') + ((userId =="" || userId==undefined) ? "" : "&userId=" + userId);
+			var operation = $('#pauseOne-' + $(this).attr('data-id')).html();
+			dialog.confirm({
+				message:'您确定'+ operation +'本条记录吗？',
+				success:function(){
+					banThis($(this), operation +'中..');
+					var thisObj =  $(this);
+					$.ajax({
+						url : url,
+						method : 'post',
+						dataType : 'json',
+						success : function (data) {
+							if(data.head.status=='S'){
+								layer.msg( operation +'成功!');
+								reLoad();
+								$('#refresh').click();
+							}else{
+								layer.msg(data.head.msg);
+							}
+							releaseThis(thisObj,operation);
+						}
+					})
+				},
+				cancel:function(){
+					layer.msg('您取消了'+ operation +'本条记录操作')
+				}
+			});
+			return false;
+		});
+	}
+</script>
 
