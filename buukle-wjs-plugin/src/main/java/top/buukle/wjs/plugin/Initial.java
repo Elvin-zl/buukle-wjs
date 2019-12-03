@@ -22,6 +22,9 @@ import top.buukle.common.call.CommonRequest;
 import top.buukle.common.call.PageResponse;
 import top.buukle.common.call.code.BaseReturnEnum;
 import top.buukle.common.exception.CommonException;
+import top.buukle.common.message.MessageActivityEnum;
+import top.buukle.common.message.MessageDTO;
+import top.buukle.common.message.MessageHead;
 import top.buukle.util.JsonUtil;
 import top.buukle.util.StringUtil;
 import top.buukle.util.SystemUtil;
@@ -37,6 +40,7 @@ import top.buukle.wjs.plugin.zk.constants.ZkConstants;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -172,48 +176,8 @@ public class Initial implements ApplicationRunner {
      * @return void
      * @Author zhanglei1102
      * @Date 2019/11/29
-     *
-     * 主要流程 :
-     *
-     *                                                         WorkerJobList -> WorkerJob
-     *                                                                               |
-     *                                                                               |
-     *                                                                       判断是否指定ip组 --------Y--------> 判断本机ip是否在ip组 ------N--------> continue;
-     *                                                                               |                               |
-     *                                                                               N                               Y
-     *                                                                               |                               |
-     *                                                                               |                               |
-     *                                                                               ---------------------------------
-     *                                                                                             |
-     *                                                                                             |
-     *                                                                                             |
-     *                  continue;                            ----------Y(已存在)----初始化节点路径信息,并检查zk是否在该路径存在节点
-     *                    |                                  |                                     |
-     *                    |                                  |                                     |
-     *                    N                                  |                                     N (不存在)
-     *                    |                                  |                       (创建失败)     |
-     *    判断已有节点 data是否符合本机ip_pid <---Y------ 判断该任务是否为单机执行  <----------N-----尝试创建节点
-     *                    |                                  |                                     |
-     *                    |                                  |                                     |
-     *                    Y(符合本机执行)                     N (集群执行)                           Y(创建成功)
-     *                    |                                  |                                     |
-     *                    |                                  |                                     |
-     *                    |                                  |                                     |
-     *                    |                                  |                                     |
-     *                    |                                  |                                     |
-     *                    |                                  |                                     |
-     *                    --------------------------------------------------------------------------
-     *                                                       |
-     *                                                       |
-     *                                                       |
-     *                                                 创建或更新任务
-     *
-     *
-     *
-     *
      */
     private void createJobs(List<LinkedHashMap> list) throws Exception {
-        String ip = SystemUtil.getIp();
         // 声明任务节点路径
         String path ;
         for (LinkedHashMap map  : list) {
@@ -230,72 +194,16 @@ public class Initial implements ApplicationRunner {
                     StringUtil.BACKSLASH + workerJob.getId();
            try{
                LOGGER.info("尝试在zk创建任务节点,id : {},path :{}",workerJob.getId(),path);
-               ZkOperator.createAndInitParentsIfNeededEphemeral(curatorFramework,path,"".getBytes());
+               MessageHead head = new MessageHead();
+               head.setApplicationName(env.getProperty("spring.application.name"));
+               head.setOperationTime(new Date());
+               MessageDTO messageDTO = new MessageDTO(head, MessageActivityEnum.INIT,workerJob);
+               ZkOperator.createAndInitParentsIfNeededEphemeral(curatorFramework,path,JsonUtil.toJSONString(messageDTO).getBytes());
                LOGGER.info("在zk创建任务节点完成,id : {},path :{}",workerJob.getId(),path);
            }catch (Exception e){
                // 此处可用 exist 检查一下 , 因为没有合适的触达插件, 这里按照已创建处理
                LOGGER.info("在zk创建任务节点异常或已经有任务节点,id : {},path :{}",workerJob.getId(),path);
            }
-            // 处理单条
-            if(!this.handleOne(ip,workerJob)){
-                continue;
-            }
-            // 创建或更新本地任务实例
-            if( null == JobOperator.getCronTrigger(scheduler,workerJob.getId())){
-                JobOperator.createJob(curatorFramework,workerJob,scheduler);
-            }else{
-                JobOperator.updateJob(curatorFramework,workerJob,scheduler);
-            }
         }
-    }
-
-    /**
-     * @description 处理一个任务
-     * @param ip
-     * @param workerJob
-     * @return boolean
-     * @Author zhanglei1102
-     * @Date 2019/11/29
-     */
-    private boolean handleOne(String ip, WorkerJob workerJob) throws Exception {
-        // 初始化任务锁节点路径
-        String lockPath = ZkConstants.BUUKLE_WJS_JOB_LOCK_PARENT_NODE + StringUtil.BACKSLASH + workerJob.getId();
-        // ip组未指定 或者 ip组已经指定,本机ip不在ip组
-        if(StringUtil.isEmpty(workerJob.getIpGroup()) || workerJob.getIpGroup().contains(ip)){
-            // 单机执行
-            if(workerJob.getExecuteType() != null && workerJob.getExecuteType() == 1){
-                // 直接在zk上抢占资源
-                try{
-                    LOGGER.info("开始抢占zk节点资源,任务id : {}",workerJob.getId());
-                    ZkOperator.createAndInitParentsIfNeededEphemeral(curatorFramework,lockPath,SystemUtil.ipPid().getBytes());
-                    LOGGER.info("抢占zk节点资源成功,任务id : {}",workerJob.getId());
-                    return true;
-                }
-                // 抢占失败,过程中已经创建过了
-                catch (Exception e){
-                    LOGGER.info("抢占zk节点资源失败,任务id : {},原因 :{}",workerJob.getId(),e.getMessage());
-                    String data = ZkOperator.getData(curatorFramework, lockPath);
-                    // 再次确认下是否为本实例创建的
-                    if(StringUtil.isNotEmpty(data) && data.equals(SystemUtil.ipPid())){
-                        LOGGER.info("单机任务zk节点已经存在,id : {},是在本实例执行,将创建或更新任务!",workerJob.getId());
-                        return true;
-                    }else{
-                        LOGGER.info("单机任务zk节点已经存在,id : {},不是在本实例执行,将不在创建或更新任务!",workerJob.getId());
-                        return false;
-                    }
-                }
-            }
-            // 分布执行
-            else if(workerJob.getExecuteType() != null && workerJob.getExecuteType() == 2){
-                return true;
-            }
-            // 执行方式不正确
-            else{
-                LOGGER.info("该任务的执行方式错误, id :{}",workerJob.getId());
-                return false;
-            }
-        }
-        // ip组已经指定,本机ip不在ip组,直接gg思密达
-        return false;
     }
 }

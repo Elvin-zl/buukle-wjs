@@ -90,6 +90,6 @@ public  class JobRunnable extends WorkerJob implements Runnable{
             JobMonitor.instance.get(this).cancel(true);
         }
         // 删除定时任务调度
-        JobOperator.deleteJob(this,SpringContextUtil.getBean(Scheduler.class));
+        JobOperator.deleteJob(this);
     }
 }

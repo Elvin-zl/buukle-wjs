@@ -13,6 +13,7 @@ package top.buukle.wjs.plugin.zk.listener.impl;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.TreeCacheEvent;
 import top.buukle.common.log.BaseLogger;
+import top.buukle.util.StringUtil;
 import top.buukle.wjs.plugin.zk.ZkOperator;
 import top.buukle.wjs.plugin.zk.constants.ZkConstants;
 import top.buukle.wjs.plugin.zk.listener.ZkAbstractListener;
@@ -38,22 +39,51 @@ public class ApplicationListener extends ZkAbstractListener {
             return;
         }
         TreeCacheEvent.Type eventType = treeCacheEvent.getType();
+        if(null == treeCacheEvent.getData()){
+            return;
+        }
+        String path = treeCacheEvent.getData().getPath();
+        String[] pathArr = path.split("/");
+        int length =  pathArr.length;
+        // /buukle.wjs.app.parent
+        if(length == 2 ){
+            LOGGER.info("引用父节点 : {} 发生变化...",treeCacheEvent.getData().getPath());
+            return;
+        }
+        // /buukle.wjs.app.parent/buukle-security
+        if(length == 3 ){
+            LOGGER.info("应用目录 : {} 发生变化...",treeCacheEvent.getData().getPath());
+            return;
+        }
+        // /buukle.wjs.app.parent/buukle-security/127.0.0.1_9527   -------> 实例新增需要重新分片
+        String applicationPath ;
+        if(length == 4 ){
+            LOGGER.info("应用实例 : {} 发生变化...",treeCacheEvent.getData().getPath());
+            applicationPath = pathArr[0] + StringUtil.BACKSLASH + pathArr[1] + StringUtil.BACKSLASH + pathArr[2];
+        }else{
+            LOGGER.error("节点路径 : {} 非法!",treeCacheEvent.getData().getPath());
+            return;
+        }
         switch (eventType) {
             case INITIALIZED:
-                ZkOperator.reSharded(curatorFramework, ZkConstants.BUUKLE_WJS_APP_PARENT_NODE);
+                LOGGER.info("应用实例 : {} 初始化...",path);
+                ZkOperator.reSharded( applicationPath);
                 break;
             case NODE_ADDED:
-                LOGGER.info("子节点 : {} 新增...",treeCacheEvent.getData().getPath());
-                ZkOperator.reSharded(curatorFramework, ZkConstants.BUUKLE_WJS_APP_PARENT_NODE);
+                LOGGER.info("应用实例 : {} 新增...",path);
+                ZkOperator.reSharded(applicationPath);
+                break;
+            case NODE_UPDATED:
+                LOGGER.info("应用实例 : {} 更新.(由分片引起不用再次分片)..",path);
                 break;
             case NODE_REMOVED:
-                LOGGER.info("子节点 : {} 移除...",treeCacheEvent.getData().getPath());
-                ZkOperator.reSharded(curatorFramework, ZkConstants.BUUKLE_WJS_APP_PARENT_NODE);
+                LOGGER.info("应用实例 : {} 移除...",path);
+                ZkOperator.reSharded(applicationPath);
                 break;
             case CONNECTION_SUSPENDED:
             case CONNECTION_LOST:
-                LOGGER.info("子节点 : {} 失去连接...",treeCacheEvent.getData().getPath());
-                ZkOperator.reSharded(curatorFramework, ZkConstants.BUUKLE_WJS_APP_PARENT_NODE);
+                LOGGER.info("应用实例 : {} 失去连接...",path);
+                ZkOperator.reSharded(applicationPath);
                 break;
             default:
                 break;
