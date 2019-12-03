@@ -8,7 +8,7 @@
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-package top.buukle.wjs.plugin.quartz.service;
+package top.buukle.wjs.plugin.quartzJob.service;
 
 import top.buukle.common.call.CommonResponse;
 
@@ -18,7 +18,7 @@ import top.buukle.common.call.CommonResponse;
  * @create 2019/12/2
  * @since 1.0.0
  */
-public interface ExecuteService {
+public interface JobExecuteService {
 
     public CommonResponse execute(String params) ;
 

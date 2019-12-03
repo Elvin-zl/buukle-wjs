@@ -163,7 +163,7 @@ public class ZkOperator {
      * @Author elvin
      * @Date 2019/9/12
      */
-    private static void setData(CuratorFramework curatorFramework, String path, byte[] data) throws Exception {
+    public static void setData(CuratorFramework curatorFramework, String path, byte[] data) throws Exception {
         curatorFramework.setData().forPath(path, data);
     }
 

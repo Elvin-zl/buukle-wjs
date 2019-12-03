@@ -8,7 +8,7 @@
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-package top.buukle.wjs.plugin.quartz.quartzJobBean;
+package top.buukle.wjs.plugin.quartzJob.quartz;
 
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.BeanUtils;
@@ -16,9 +16,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import top.buukle.util.SpringContextUtil;
 import top.buukle.util.log.BaseLogger;
-import top.buukle.wjs.plugin.quartz.QuartzOperator;
-import top.buukle.wjs.plugin.quartz.monitor.JobMonitor;
-import top.buukle.wjs.plugin.quartz.quartzJobBean.threadpool.JobRunnable;
+import top.buukle.wjs.plugin.quartzJob.monitor.JobMonitor;
+import top.buukle.wjs.plugin.quartzJob.threadpool.JobRunnable;
 
 import java.util.concurrent.Future;
 
@@ -36,7 +35,7 @@ public class JobBean extends QuartzJobBean {
     protected void executeInternal(JobExecutionContext jobExecutionContext) {
         ThreadPoolTaskExecutor poolTaskExecutor = (ThreadPoolTaskExecutor)SpringContextUtil.getBean("buukle.wjs.plugin.threadPoolTaskExecutor");
         JobRunnable jobRunnable = new JobRunnable(System.currentTimeMillis());
-        BeanUtils.copyProperties(jobExecutionContext.getJobDetail().getJobDataMap().get(QuartzOperator.JOB_PARAM_KEY),jobRunnable);
+        BeanUtils.copyProperties(jobExecutionContext.getJobDetail().getJobDataMap().get(JobOperator.JOB_PARAM_KEY),jobRunnable);
         if(!JobMonitor.instance.exsits(jobRunnable)){
             LOGGER.info("任务描述 :{} ,id : {}进入执行池!",jobRunnable.getDescription(),jobRunnable.getId());
             Future<?> future = poolTaskExecutor.submit(jobRunnable);

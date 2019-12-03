@@ -8,7 +8,7 @@
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-package top.buukle.wjs.plugin.quartz.quartzJobBean.threadpool;
+package top.buukle.wjs.plugin.quartzJob.threadpool;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +24,7 @@ import top.buukle.util.StringUtil;
  * @since 1.0.0
  */
 @Configuration
-public class ThreadPoolConfigure {
+public class JobThreadPoolConfigure {
 
 
     /** 任务执行线程池的核心线程数 配置key*/
@@ -54,7 +54,7 @@ public class ThreadPoolConfigure {
         threadPoolTaskExecutor.setMaxPoolSize(Integer.parseInt(StringUtil.isEmpty(env.getProperty(TASK_EXECUTOR_MAX_POOL_SIZE_KEY))? "" : "20"));
         threadPoolTaskExecutor.setQueueCapacity(Integer.parseInt(StringUtil.isEmpty(env.getProperty(TASK_EXECUTOR_QUEUE_CAPACITY_KEY))? "" : "500"));
         threadPoolTaskExecutor.setKeepAliveSeconds(Integer.parseInt(StringUtil.isEmpty(env.getProperty(TASK_EXECUTOR_KEEP_ALIVE_SECONDS_KEY))? "" : "30"));
-        threadPoolTaskExecutor.setRejectedExecutionHandler(new ThreadPoolDefaultRejectPolicy());
+        threadPoolTaskExecutor.setRejectedExecutionHandler(new JobThreadPoolDefaultRejectPolicy());
         return threadPoolTaskExecutor;
     }
 }

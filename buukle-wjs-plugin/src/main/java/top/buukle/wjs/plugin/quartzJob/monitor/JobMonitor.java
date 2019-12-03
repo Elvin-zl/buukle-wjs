@@ -1,9 +1,9 @@
-package top.buukle.wjs.plugin.quartz.monitor;
+package top.buukle.wjs.plugin.quartzJob.monitor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.buukle.util.JsonUtil;
-import top.buukle.wjs.plugin.quartz.quartzJobBean.threadpool.JobRunnable;
+import top.buukle.wjs.plugin.quartzJob.threadpool.JobRunnable;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;

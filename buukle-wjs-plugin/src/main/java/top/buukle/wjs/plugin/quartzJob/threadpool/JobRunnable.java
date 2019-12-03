@@ -8,8 +8,9 @@
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-package top.buukle.wjs.plugin.quartz.quartzJobBean.threadpool;
+package top.buukle.wjs.plugin.quartzJob.threadpool;
 
+import org.quartz.Scheduler;
 import org.springframework.core.env.Environment;
 import top.buukle.common.call.CommonRequest;
 import top.buukle.util.SpringContextUtil;
@@ -18,10 +19,9 @@ import top.buukle.util.log.BaseLogger;
 import top.buukle.wjs.entity.WorkerJob;
 import top.buukle.wjs.entity.constants.WorkerJobEnums;
 import top.buukle.wjs.plugin.invoker.WorkerJobInvoker;
-import top.buukle.wjs.plugin.quartz.service.ExecuteService;
-import top.buukle.wjs.plugin.quartz.monitor.JobMonitor;
-
-import java.util.concurrent.Future;
+import top.buukle.wjs.plugin.quartzJob.quartz.JobOperator;
+import top.buukle.wjs.plugin.quartzJob.service.JobExecuteService;
+import top.buukle.wjs.plugin.quartzJob.monitor.JobMonitor;
 
 
 /**
@@ -56,7 +56,7 @@ public  class JobRunnable extends WorkerJob implements Runnable{
         }
         // 执行任务
         try {
-            ((ExecuteService) SpringContextUtil.getBean(Class.forName(this.getBeanReferenceName()))).execute(this.getParams());
+            ((JobExecuteService) SpringContextUtil.getBean(Class.forName(this.getBeanReferenceName()))).execute(this.getParams());
         } catch (Exception e) {
             e.printStackTrace();
             // 快速失败
@@ -85,10 +85,11 @@ public  class JobRunnable extends WorkerJob implements Runnable{
         CommonRequest<WorkerJob> commonRequest = new CommonRequest.Builder().build(env.getProperty("spring.application.name"));
         commonRequest.setBody(workerJob);
         invoker.updateWorkerJob(commonRequest);
-        // 取消任务
-        Future future = JobMonitor.instance.get(this);
-        if(future != null){
-            future.cancel(true);
+        // 停止任务执行粒度 线程
+        if(JobMonitor.instance.exsits(this)){
+            JobMonitor.instance.get(this).cancel(true);
         }
+        // 删除定时任务调度
+        JobOperator.deleteJob(this,SpringContextUtil.getBean(Scheduler.class));
     }
 }

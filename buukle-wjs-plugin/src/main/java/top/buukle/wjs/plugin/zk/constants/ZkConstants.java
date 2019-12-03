@@ -21,5 +21,6 @@ public class ZkConstants {
     public static final String BUUKLE_WJS_APP_PARENT_NODE = "/buukle.wjs.app.parent";
     /** 任务父节点*/
     public static final String BUUKLE_WJS_JOB_PARENT_NODE = "/buukle.wjs.job.parent";
-
+    /** 任务锁父节点*/
+    public static final String BUUKLE_WJS_JOB_LOCK_PARENT_NODE = "/buukle.wjs.job.lock.parent";
 }

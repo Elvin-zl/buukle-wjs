@@ -30,8 +30,8 @@ import top.buukle.wjs.entity.WorkerJob;
 import top.buukle.wjs.entity.constants.WorkerJobEnums;
 import top.buukle.wjs.entity.vo.WorkerJobQuery;
 import top.buukle.wjs.plugin.invoker.WorkerJobInvoker;
-import top.buukle.wjs.plugin.quartz.QuartzOperator;
-import top.buukle.wjs.plugin.zk.ZkListenerInitial;
+import top.buukle.wjs.plugin.quartzJob.quartz.JobOperator;
+import top.buukle.wjs.plugin.zk.ZkInitial;
 import top.buukle.wjs.plugin.zk.ZkOperator;
 import top.buukle.wjs.plugin.zk.constants.ZkConstants;
 
@@ -54,7 +54,7 @@ public class Initial implements ApplicationRunner {
     private final static BaseLogger LOGGER = BaseLogger.getLogger(Initial.class);
 
     @Autowired
-    private ZkListenerInitial listenerInitial;
+    private ZkInitial listenerInitial;
     @Autowired
     CuratorFramework curatorFramework;
     @Autowired
@@ -63,6 +63,11 @@ public class Initial implements ApplicationRunner {
     private Environment env;
     @Resource
     private Scheduler scheduler;
+
+    @Override
+    public void run(ApplicationArguments args){
+        this.init();
+    }
 
     void init()  {
 
@@ -209,17 +214,37 @@ public class Initial implements ApplicationRunner {
      */
     private void createJobs(List<LinkedHashMap> list) throws Exception {
         String ip = SystemUtil.getIp();
+        // 声明任务节点路径
+        String path ;
         for (LinkedHashMap map  : list) {
             WorkerJob workerJob = JsonUtil.parseObject(JsonUtil.toJSONString(map),WorkerJob.class);
+
+            // 初始化任务节点路径
+            path =  // 任务总目录层
+                    ZkConstants.BUUKLE_WJS_JOB_PARENT_NODE +
+                    // 应用目录
+                    StringUtil.BACKSLASH + env.getProperty("spring.application.name") +
+                    // 任务类型层
+                    StringUtil.BACKSLASH + workerJob.getExecuteType() +
+                    // 任务id目录层       -- 此层 data 为该任务的ipPid
+                    StringUtil.BACKSLASH + workerJob.getId();
+           try{
+               LOGGER.info("尝试在zk创建任务节点,id : {},path :{}",workerJob.getId(),path);
+               ZkOperator.createAndInitParentsIfNeededEphemeral(curatorFramework,path,"".getBytes());
+               LOGGER.info("在zk创建任务节点完成,id : {},path :{}",workerJob.getId(),path);
+           }catch (Exception e){
+               // 此处可用 exist 检查一下 , 因为没有合适的触达插件, 这里按照已创建处理
+               LOGGER.info("在zk创建任务节点异常或已经有任务节点,id : {},path :{}",workerJob.getId(),path);
+           }
             // 处理单条
             if(!this.handleOne(ip,workerJob)){
                 continue;
             }
             // 创建或更新本地任务实例
-            if( null == QuartzOperator.getCronTrigger(scheduler,workerJob.getId())){
-                QuartzOperator.createJob(workerJob,scheduler);
+            if( null == JobOperator.getCronTrigger(scheduler,workerJob.getId())){
+                JobOperator.createJob(curatorFramework,workerJob,scheduler);
             }else{
-                QuartzOperator.updateJob(workerJob,scheduler);
+                JobOperator.updateJob(curatorFramework,workerJob,scheduler);
             }
         }
     }
@@ -233,71 +258,44 @@ public class Initial implements ApplicationRunner {
      * @Date 2019/11/29
      */
     private boolean handleOne(String ip, WorkerJob workerJob) throws Exception {
-        // ip组已经指定,本机ip不在ip组,直接gg思密达
-        if(StringUtil.isNotEmpty(workerJob.getIpGroup()) && !workerJob.getIpGroup().contains(ip)){
-            return false;
-        }
-        // 初始化任务节点路径
-        String path =
-                // 任务总目录层
-                ZkConstants.BUUKLE_WJS_JOB_PARENT_NODE +
-                // 应用目录
-                StringUtil.BACKSLASH + env.getProperty("spring.application.name") +
-                // 任务类型层
-                StringUtil.BACKSLASH + workerJob.getExecuteType() +
-                // 任务id目录层       -- 此层 data 为该任务的ipPid
-                StringUtil.BACKSLASH + workerJob.getId();
-
-        // 查看节点是否存在，否，则尝试创建该节点
-        if(!ZkOperator.checkExists(curatorFramework, path)){
-            try{
-                ZkOperator.createAndInitParentsIfNeededEphemeral(curatorFramework,path,SystemUtil.ipPid().getBytes());
-                // 创建成功
+        // 初始化任务锁节点路径
+        String lockPath = ZkConstants.BUUKLE_WJS_JOB_LOCK_PARENT_NODE + StringUtil.BACKSLASH + workerJob.getId();
+        // ip组未指定 或者 ip组已经指定,本机ip不在ip组
+        if(StringUtil.isEmpty(workerJob.getIpGroup()) || workerJob.getIpGroup().contains(ip)){
+            // 单机执行
+            if(workerJob.getExecuteType() != null && workerJob.getExecuteType() == 1){
+                // 直接在zk上抢占资源
+                try{
+                    LOGGER.info("开始抢占zk节点资源,任务id : {}",workerJob.getId());
+                    ZkOperator.createAndInitParentsIfNeededEphemeral(curatorFramework,lockPath,SystemUtil.ipPid().getBytes());
+                    LOGGER.info("抢占zk节点资源成功,任务id : {}",workerJob.getId());
+                    return true;
+                }
+                // 抢占失败,过程中已经创建过了
+                catch (Exception e){
+                    LOGGER.info("抢占zk节点资源失败,任务id : {},原因 :{}",workerJob.getId(),e.getMessage());
+                    String data = ZkOperator.getData(curatorFramework, lockPath);
+                    // 再次确认下是否为本实例创建的
+                    if(StringUtil.isNotEmpty(data) && data.equals(SystemUtil.ipPid())){
+                        LOGGER.info("单机任务zk节点已经存在,id : {},是在本实例执行,将创建或更新任务!",workerJob.getId());
+                        return true;
+                    }else{
+                        LOGGER.info("单机任务zk节点已经存在,id : {},不是在本实例执行,将不在创建或更新任务!",workerJob.getId());
+                        return false;
+                    }
+                }
+            }
+            // 分布执行
+            else if(workerJob.getExecuteType() != null && workerJob.getExecuteType() == 2){
                 return true;
             }
-            // 创建失败,过程中已经被别人创建了
-            catch (Exception e){
-                return this.handleExist(workerJob,path);
-            }
-        }
-        // 存在
-        else{
-            return this.handleExist(workerJob,path);
-        }
-    }
-
-    /**
-     * @description 处理已经存在节点的任务
-     * @param workerJob
-     * @param path
-     * @return boolean
-     * @Author zhanglei1102
-     * @Date 2019/11/29
-     */
-    private boolean handleExist(WorkerJob workerJob, String path) throws Exception {
-        // 单机执行
-        if(workerJob.getExecuteType() != null && workerJob.getExecuteType() == 1){
-            String data = ZkOperator.getData(curatorFramework, path);
-            // 是在本实例执行
-            if(StringUtil.isNotEmpty(data) && data.equals(SystemUtil.ipPid())){
-                return true;
-            }else{
+            // 执行方式不正确
+            else{
+                LOGGER.info("该任务的执行方式错误, id :{}",workerJob.getId());
                 return false;
             }
         }
-        // 分布执行
-         else if(workerJob.getExecuteType() != null && workerJob.getExecuteType() == 2){
-            return true;
-         }
-         else{
-             LOGGER.info("该任务的执行方式错误, id :{}",workerJob.getId());
-            return false;
-        }
-
-    }
-
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-        this.init();
+        // ip组已经指定,本机ip不在ip组,直接gg思密达
+        return false;
     }
 }

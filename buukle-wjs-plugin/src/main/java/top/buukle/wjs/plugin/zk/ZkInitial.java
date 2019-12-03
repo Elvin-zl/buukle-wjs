@@ -31,9 +31,9 @@ import java.util.List;
  * @since 1.0.0
  */
 @Component
-public class ZkListenerInitial {
+public class ZkInitial {
 
-    private static final BaseLogger LOGGER =  BaseLogger.getLogger(ZkListenerInitial.class);
+    private static final BaseLogger LOGGER =  BaseLogger.getLogger(ZkInitial.class);
 
     private static final byte[] INIT_ZK_VALUE = "0".getBytes();
 

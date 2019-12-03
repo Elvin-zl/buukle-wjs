@@ -8,13 +8,12 @@
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-package top.buukle.wjs.plugin.quartz.service.impl;
+package top.buukle.wjs.plugin.quartzJob.service.impl;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import top.buukle.common.call.CommonResponse;
 import top.buukle.util.log.BaseLogger;
-import top.buukle.wjs.plugin.quartz.service.ExecuteService;
+import top.buukle.wjs.plugin.quartzJob.service.JobExecuteService;
 
 /**
  * @description 〈测试定时任务〉
@@ -23,9 +22,9 @@ import top.buukle.wjs.plugin.quartz.service.ExecuteService;
  * @since 1.0.0
  */
 @Service
-public class TestExecuteServiceImpl implements ExecuteService {
+public class JobExecuteServiceTestImpl implements JobExecuteService {
 
-    private static final BaseLogger LOGGER = BaseLogger.getLogger(TestExecuteServiceImpl.class);
+    private static final BaseLogger LOGGER = BaseLogger.getLogger(JobExecuteServiceTestImpl.class);
 
     @Override
     public CommonResponse execute(String params) {

@@ -1,4 +1,4 @@
-package top.buukle.wjs.plugin.quartz.quartzJobBean.threadpool;
+package top.buukle.wjs.plugin.quartzJob.threadpool;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @Author zhanglei1102
  * @Date 2019/9/9
  */
-public class ThreadPoolDefaultRejectPolicy extends ThreadPoolExecutor.DiscardPolicy  {
+public class JobThreadPoolDefaultRejectPolicy extends ThreadPoolExecutor.DiscardPolicy  {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
