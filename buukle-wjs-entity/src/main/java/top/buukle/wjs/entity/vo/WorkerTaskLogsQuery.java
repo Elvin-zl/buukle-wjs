@@ -1,6 +1,6 @@
 package top.buukle.wjs .entity.vo;
 
-import top.buukle.util.mvc.BaseQuery;
+import top.buukle.common.mvc.BaseQuery;
 import top.buukle.wjs .entity.WorkerTaskLogs;
 
 

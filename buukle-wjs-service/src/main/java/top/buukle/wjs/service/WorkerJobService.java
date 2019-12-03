@@ -1,7 +1,7 @@
 package top.buukle.wjs .service;
 
 import top.buukle.common.call.CommonResponse;
-import top.buukle.util.mvc.BaseService;
+import top.buukle.common.mvc.BaseService;
 import top.buukle.wjs .entity.vo.WorkerJobQuery;
 
 import javax.servlet.http.HttpServletRequest;

@@ -15,7 +15,7 @@ import org.springframework.core.env.Environment;
 import top.buukle.common.call.CommonRequest;
 import top.buukle.util.SpringContextUtil;
 import top.buukle.util.StringUtil;
-import top.buukle.util.log.BaseLogger;
+import top.buukle.common.log.BaseLogger;
 import top.buukle.wjs.entity.WorkerJob;
 import top.buukle.wjs.entity.constants.WorkerJobEnums;
 import top.buukle.wjs.plugin.invoker.WorkerJobInvoker;

@@ -17,7 +17,7 @@ import org.apache.curator.framework.recipes.leader.LeaderLatchListener;
 import org.apache.zookeeper.CreateMode;
 import org.springframework.util.CollectionUtils;
 import top.buukle.util.StringUtil;
-import top.buukle.util.log.BaseLogger;
+import top.buukle.common.log.BaseLogger;
 import top.buukle.wjs.plugin.zk.cache.ZkCache;
 import top.buukle.wjs.plugin.zk.listener.ZkAbstractListener;
 

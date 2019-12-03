@@ -15,7 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import top.buukle.util.SpringContextUtil;
-import top.buukle.util.log.BaseLogger;
+import top.buukle.common.log.BaseLogger;
 import top.buukle.wjs.plugin.quartzJob.monitor.JobMonitor;
 import top.buukle.wjs.plugin.quartzJob.threadpool.JobRunnable;
 

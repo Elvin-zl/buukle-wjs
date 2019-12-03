@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import top.buukle.util.StringUtil;
 import top.buukle.util.SystemUtil;
-import top.buukle.util.log.BaseLogger;
+import top.buukle.common.log.BaseLogger;
 import top.buukle.wjs.plugin.zk.constants.ZkConstants;
 import top.buukle.wjs.plugin.zk.listener.impl.ApplicationListener;
 import top.buukle.wjs.plugin.zk.listener.impl.JobListener;

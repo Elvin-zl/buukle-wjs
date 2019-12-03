@@ -25,7 +25,7 @@ import top.buukle.common.exception.CommonException;
 import top.buukle.util.JsonUtil;
 import top.buukle.util.StringUtil;
 import top.buukle.util.SystemUtil;
-import top.buukle.util.log.BaseLogger;
+import top.buukle.common.log.BaseLogger;
 import top.buukle.wjs.entity.WorkerJob;
 import top.buukle.wjs.entity.constants.WorkerJobEnums;
 import top.buukle.wjs.entity.vo.WorkerJobQuery;

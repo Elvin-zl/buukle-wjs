@@ -12,7 +12,7 @@ package top.buukle.wjs.plugin.quartzJob.service.impl;
 
 import org.springframework.stereotype.Service;
 import top.buukle.common.call.CommonResponse;
-import top.buukle.util.log.BaseLogger;
+import top.buukle.common.log.BaseLogger;
 import top.buukle.wjs.plugin.quartzJob.service.JobExecuteService;
 
 /**

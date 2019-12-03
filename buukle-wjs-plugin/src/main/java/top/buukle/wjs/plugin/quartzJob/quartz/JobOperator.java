@@ -13,9 +13,8 @@ package top.buukle.wjs.plugin.quartzJob.quartz;
 import org.apache.curator.framework.CuratorFramework;
 import org.quartz.*;
 import top.buukle.util.JsonUtil;
-import top.buukle.util.log.BaseLogger;
+import top.buukle.common.log.BaseLogger;
 import top.buukle.wjs.entity.WorkerJob;
-import top.buukle.wjs.plugin.zk.ZkOperator;
 
 /**
  * @description 〈〉
