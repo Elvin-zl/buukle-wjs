@@ -79,6 +79,6 @@ public class ZkInitial {
             }
         }
         // 订阅任务父节点
-        ZkOperator.subscribe(curatorFramework,new JobListener(jobParentPath,env.getProperty("spring.application.name")));
+        ZkOperator.subscribe(curatorFramework,new JobListener(curatorFramework,jobParentPath,env.getProperty("spring.application.name")));
     }
 }

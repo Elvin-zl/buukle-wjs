@@ -31,6 +31,6 @@ public class TestListener extends ZkAbstractListener {
 
     @Override
     public void childEvent(CuratorFramework curatorFramework, TreeCacheEvent treeCacheEvent) throws Exception {
-        ZkOperator.reSharded(curatorFramework,"/elvin.buukle.testp");
+        ZkOperator.reSharded("/elvin.buukle.testp");
     }
 }

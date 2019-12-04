@@ -16,6 +16,7 @@ import org.apache.curator.framework.recipes.leader.LeaderLatch;
 import org.apache.curator.framework.recipes.leader.LeaderLatchListener;
 import org.apache.zookeeper.CreateMode;
 import org.springframework.util.CollectionUtils;
+import top.buukle.util.SpringContextUtil;
 import top.buukle.util.StringUtil;
 import top.buukle.common.log.BaseLogger;
 import top.buukle.wjs.plugin.zk.cache.ZkCache;
@@ -111,7 +112,7 @@ public class ZkOperator {
                 ZkCache.LEADER_CACHE = true;
                 // 重新分片
                 try {
-                    reSharded(curatorFramework, path);
+                    reSharded(path);
                 } catch (Exception e) {
                     LOGGER.info("重新分片出现异常,原因 :{}",e.getMessage());
                     e.printStackTrace();
@@ -129,22 +130,21 @@ public class ZkOperator {
 
     /**
      * @description 重新分片
-     * @param curatorFramework
      * @param path
      * @return void
      * @Author elvin
      * @Date 2019/9/11
      */
-    public static void reSharded(CuratorFramework curatorFramework, String path) throws Exception {
+    public static void reSharded( String path) throws Exception {
         LOGGER.info("节点 : {} 开始重新分片... ",path);
-        List<String> children =  getChildren(curatorFramework,path);
+        List<String> children =  getChildren(SpringContextUtil.getBean(CuratorFramework.class),path);
         if(CollectionUtils.isEmpty(children)){
             LOGGER.info("节点 : {} 重新分片完成,没有找到有效子节点! ",path);
         }
         int shardId = 1;
         for (String childPath : children) {
             try{
-                setData(curatorFramework,path + "/" + childPath,(shardId+StringUtil.EMPTY).getBytes());
+                setData(SpringContextUtil.getBean(CuratorFramework.class),path + "/" + childPath,(shardId+StringUtil.EMPTY).getBytes());
                 LOGGER.info("节点 : {} 下子节点 {} 重新分片完成! ",path,childPath);
             }catch (Exception e){
                 LOGGER.info("节点 : {} 下子节点 {} 重新分片完成,分片索引无变化! ",path,childPath);
