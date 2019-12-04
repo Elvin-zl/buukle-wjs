@@ -188,9 +188,9 @@ function renderSelectedTree(tree,data,elem,idTarget){
     }).on("click", "dl i", function (e) {
         layui.stope(e);
     });
-    $(document).off().on("click", function (e) {
-        $(".layui-form-select").removeClass("layui-form-selected");
-    });
+    // $(document).off().on("click", function (e) {
+    //     $(".layui-form-select").removeClass("layui-form-selected");
+    // });
 }
 /**
  * 渲染简单的复选框树

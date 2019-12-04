@@ -20,6 +20,27 @@
 					<div class="layui-form-item">
 						<label class="layui-form-label">
 							<i class="require">*</i>
+							所属应用：
+						</label>
+						<div class="layui-input-inline">
+							<div class="layui-unselect layui-form-select downpanel">
+								<div class="layui-select-title">
+									<span id="applicationCode" style="padding-top: 10px;" class="layui-input layui-unselect" th:text="${record?.bak01}" ></span>
+									<input type="hidden" id="applicationId" th:attr="value = (${record?.applicationId} == 0 ? '' : ${record?.applicationId})" name="applicationId">
+									<input type="hidden" id="bak01" th:attr="value = ${record?.bak01}" name="bak01">
+									<i class="layui-edge"></i>
+								</div>
+								<dl class="layui-anim layui-anim-upbit">
+									<dd>
+										<ul data-url="/getUserApplication" id="applicationTree"></ul>
+									</dd>
+								</dl>
+							</div>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">
+							<i class="require">*</i>
 							任务名称：
 						</label>
 						<div class="layui-input-block">
@@ -33,8 +54,8 @@
 						</label>
 						<div class="layui-input-block">
 							<select name="executeType">
-								<option th:field="*{record.executeType}" value="0">单机执行</option>
-								<option th:field="*{record.executeType}" value="1">集群分片</option>
+								<option th:field="*{record.executeType}" value="1">单机执行</option>
+								<option th:field="*{record.executeType}" value="2">集群分片</option>
 							</select>
 						</div>
 					</div>
@@ -128,15 +149,33 @@
 	<script src="/static/wjs/plugin/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="/static/wjs/js/jqueryValidate/jquery.validate.min.js" type="text/javascript" charset="utf-8"></script>
 	<script>
-		layui.use(['jquery', 'layer','dialog'], function() {
-			layer = layui.layer, $ = layui.jquery, dialog = layui.dialog;
+		layui.use(['jquery', 'layer','dialog','tree'], function() {
+			layer = layui.layer, $ = layui.jquery, dialog = layui.dialog, tree = layui.tree;
 			// 绑定提交
 			bindSaveOrEdit();
+			// 绑定应用选择
+			bindApplicationClick(tree);
 		});
+		/** 绑定应用选择*/
+		function bindApplicationClick(tree) {
+			$.ajax({
+				url: $('#applicationTree').attr('data-url'),
+				method:'post',
+				dataType:'json',
+				async:true,
+				success:function (data) {
+					if(data.head.status=="S"){
+						renderSelectedTree(tree,data,"#applicationTree",'applicationId');
+					}else{
+						layer.msg(data.head.msg);
+					}
+				}
+			})
+		}
 		/** 绑定提交*/
         function bindSaveOrEdit() {
 			var  validateLoin = $("#workerJobCrudForm").validate({
-					rules:{
+				rules:{
 					description:{required:true,minlength: 4},
 					beanReferenceName:"required",
 					cronExpression:"required",
@@ -151,12 +190,30 @@
 					ipGroup:"请正确输入ip分组",
 				}
 			});
+			/** 本地校验*/
+			function localValidate(obj) {
+				// 校验所属应用
+				$('#bak01').val($('#applicationCode').html());
+				if(!$('#bak01').val()){
+					layer.msg('请选择所属应用!');
+					$('#applicationId').focus();
+					releaseThis(obj,"提交");
+					return false;
+				}
+
+				return true;
+			}
+
         	$('#saveOrEdit').off().on('click',function () {
             	var obj = $(this);
                 banThis(obj,"保存中..");
-				if(!validateLoin.form()){
-					layer.msg("请按规则完成表单填写!");
-					releaseThis(obj,"提交");
+				if(localValidate(obj)){
+					if(!validateLoin.form()){
+						layer.msg("请按规则完成表单填写!");
+						releaseThis(obj,"提交");
+						return;
+					}
+				}else{
 					return;
 				}
                 $.ajax({

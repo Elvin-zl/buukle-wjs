@@ -15,7 +15,6 @@ import org.apache.curator.framework.recipes.cache.TreeCacheEvent;
 import top.buukle.common.log.BaseLogger;
 import top.buukle.common.message.MessageDTO;
 import top.buukle.util.JsonUtil;
-import top.buukle.util.StringUtil;
 import top.buukle.wjs.entity.WorkerJob;
 import top.buukle.wjs.plugin.quartzJob.quartz.JobOperator;
 import top.buukle.wjs.plugin.zk.listener.ZkAbstractListener;
@@ -30,20 +29,18 @@ public class JobListener extends ZkAbstractListener {
 
     private static final BaseLogger LOGGER =  BaseLogger.getLogger(JobListener.class);
 
-    private CuratorFramework curatorFramework;
-
-    public JobListener(CuratorFramework curatorFramework, String path, String applicationName) {
+    public JobListener( String path, String applicationName) {
         super(path, applicationName);
-        this.curatorFramework = curatorFramework;
     }
 
     @Override
     public void childEvent(CuratorFramework curatorFramework, TreeCacheEvent treeCacheEvent) {
         if(null == treeCacheEvent){
-            LOGGER.info("treeCacheEvent为null");
+            LOGGER.info("treeCacheEvent 为 null");
             return;
         }
         if(null == treeCacheEvent.getData()){
+            LOGGER.info("treeCacheEvent.getData 为 null");
             return;
         }
         String path = treeCacheEvent.getData().getPath();
@@ -104,11 +101,11 @@ public class JobListener extends ZkAbstractListener {
     private void handleChange(TreeCacheEvent treeCacheEvent) {
         if(treeCacheEvent.getData()!=null){
             byte[] message = treeCacheEvent.getData().getData();
-            LOGGER.info("任务 : {} 数据有变化，任务数据：{}",treeCacheEvent.getData().getPath(), JsonUtil.toJSONString(message));
-            MessageDTO<WorkerJob> messageDTO = JsonUtil.parseObject(message.toString(), MessageDTO.class);
+            LOGGER.info("任务 : {} 数据有变化，任务数据：{}",treeCacheEvent.getData().getPath(), new String(message));
+            MessageDTO<WorkerJob> messageDTO = JsonUtil.parseObject(new String(message), MessageDTO.class);
             //切换为集群模式，删除zk上的锁定节点
             //删除本地所有quartz实例
-            WorkerJob workerJob = messageDTO.getBody();
+            WorkerJob workerJob = JsonUtil.parseObject(JsonUtil.toJSONString( messageDTO.getBody()),WorkerJob.class);
             switch(messageDTO.getActivityEnum()){
                 case INIT:
                     LOGGER.info("任务开始创建,id :{}",workerJob.getId());
