@@ -5,6 +5,9 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import top.buukle.common.call.CommonResponse;
 import top.buukle.common.call.FuzzyResponse;
 import top.buukle.common.call.PageResponse;
@@ -71,6 +74,7 @@ public class WorkerJobLogsServiceImpl implements WorkerJobLogsService{
      * @return
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED,isolation= Isolation.DEFAULT ,rollbackFor = Exception.class)
     public CommonResponse delete(Integer id, HttpServletRequest request, HttpServletResponse response) {
         if(workerJobLogsMapper.updateByPrimaryKeySelective(this.assQueryForUpdateStatus(id, WorkerJobLogsEnums.status.DELETED.value(),request,response)) != 1){
             throw new SystemException(SystemReturnEnum.DELETE_INFO_EXCEPTION);
@@ -88,6 +92,7 @@ public class WorkerJobLogsServiceImpl implements WorkerJobLogsService{
      * @Date 2019/8/4
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED,isolation= Isolation.DEFAULT ,rollbackFor = Exception.class)
     public CommonResponse deleteBatch(String ids, HttpServletRequest request, HttpServletResponse response) {
         String trimIds = ids.trim();
         String[] split = trimIds.split(",");
@@ -136,6 +141,7 @@ public class WorkerJobLogsServiceImpl implements WorkerJobLogsService{
      * @Date 2019/8/5
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED,isolation= Isolation.DEFAULT ,rollbackFor = Exception.class)
     public CommonResponse saveOrEdit(WorkerJobLogsQuery query, HttpServletRequest request, HttpServletResponse response) {
         validateParamForSaveOrEdit(query);
         // 新增
@@ -189,6 +195,7 @@ public class WorkerJobLogsServiceImpl implements WorkerJobLogsService{
      * @return
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED,isolation= Isolation.DEFAULT ,rollbackFor = Exception.class)
     public CommonResponse save(BaseQuery query, HttpServletRequest request, HttpServletResponse response) {
 
         workerJobLogsMapper.insert(this.assQueryForInsert((WorkerJobLogsQuery)query,request,response));
@@ -203,6 +210,7 @@ public class WorkerJobLogsServiceImpl implements WorkerJobLogsService{
      * @return
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED,isolation= Isolation.DEFAULT ,rollbackFor = Exception.class)
     public CommonResponse update(BaseQuery query, HttpServletRequest request, HttpServletResponse response) {
         WorkerJobLogsQuery workerJobLogsQuery = ((WorkerJobLogsQuery)query);
 

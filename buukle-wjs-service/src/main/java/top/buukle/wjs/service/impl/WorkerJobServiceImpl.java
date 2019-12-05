@@ -81,6 +81,7 @@ public class WorkerJobServiceImpl implements WorkerJobService{
      * @Date 2019/8/4
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED,isolation= Isolation.DEFAULT ,rollbackFor = Exception.class)
     public CommonResponse deleteBatch(String ids, HttpServletRequest request, HttpServletResponse response) {
         String trimIds = ids.trim();
         String[] split = trimIds.split(",");
@@ -127,6 +128,7 @@ public class WorkerJobServiceImpl implements WorkerJobService{
      * @return
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED,isolation= Isolation.DEFAULT ,rollbackFor = Exception.class)
     public CommonResponse delete(Integer id, HttpServletRequest request, HttpServletResponse response){
 
         User operator = SessionUtil.getOperator(request, response);
@@ -232,6 +234,7 @@ public class WorkerJobServiceImpl implements WorkerJobService{
      * @Date 2019/12/5
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED,isolation= Isolation.DEFAULT ,rollbackFor = Exception.class)
     public CommonResponse init(WorkerJobQuery query, HttpServletRequest request, HttpServletResponse response) throws Exception {
         User operator = SessionUtil.getOperator(request, response);
         WorkerJob workerJobDB = this.selectByPrimaryKeyForCrud(request, query.getId());
