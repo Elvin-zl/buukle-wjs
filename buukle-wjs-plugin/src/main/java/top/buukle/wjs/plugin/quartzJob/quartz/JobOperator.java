@@ -75,24 +75,26 @@ public class JobOperator {
      * @Date 2019/11/29
      */
     public static void updateJob( WorkerJob workerJob) {
-        LOGGER.info("更新定时任务开始,参数 workerJob:{}", JsonUtil.toJSONString(workerJob));
-        CronTrigger cronTrigger = getCronTrigger( SpringContextUtil.getBean(Scheduler.class), workerJob.getId());
-        TriggerKey triggerKey = TriggerKey.triggerKey(workerJob.getId() + "");
-        // 集群执行的话,需要创建新的任务
-        if(cronTrigger == null){
-            if(workerJob.getExecuteType() == null || workerJob.getExecuteType() == 2){
-                createJob( workerJob);
-            }
-        }
-        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(workerJob.getCronExpression()).withMisfireHandlingInstructionFireAndProceed();
-        CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(workerJob.getId()+"").withSchedule(scheduleBuilder).build();
-        try {
-            SpringContextUtil.getBean(Scheduler.class).rescheduleJob(triggerKey,trigger);
-            LOGGER.info("更新定时任务成功,参数 workerJob:{}", JsonUtil.toJSONString(workerJob));
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-            LOGGER.info("更新定时任务失败,参数 workerJob:{}", JsonUtil.toJSONString(workerJob));
-        }
+        deleteJob(workerJob);
+        createJob(workerJob);
+//        LOGGER.info("更新定时任务开始,参数 workerJob:{}", JsonUtil.toJSONString(workerJob));
+//        CronTrigger cronTrigger = getCronTrigger( SpringContextUtil.getBean(Scheduler.class), workerJob.getId());
+//        TriggerKey triggerKey = TriggerKey.triggerKey(workerJob.getId() + "");
+//        // 集群执行需要创建新任务
+//        if(cronTrigger == null){
+//            if(workerJob.getExecuteType() == null || workerJob.getExecuteType() == 2){
+//                createJob( workerJob);
+//            }
+//        }
+//        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(workerJob.getCronExpression()).withMisfireHandlingInstructionFireAndProceed();
+//        CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(workerJob.getId()+"").withSchedule(scheduleBuilder).build();
+//        try {
+//            SpringContextUtil.getBean(Scheduler.class).rescheduleJob(triggerKey,trigger);
+//            LOGGER.info("更新定时任务成功,参数 workerJob:{}", JsonUtil.toJSONString(workerJob));
+//        } catch (SchedulerException e) {
+//            e.printStackTrace();
+//            LOGGER.info("更新定时任务失败,参数 workerJob:{}", JsonUtil.toJSONString(workerJob));
+//        }
     }
 
     /**

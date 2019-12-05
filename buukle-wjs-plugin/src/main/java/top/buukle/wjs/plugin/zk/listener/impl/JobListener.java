@@ -134,6 +134,11 @@ public class JobListener extends ZkAbstractListener {
                         JobOperator.deleteJob(workerJob);
                         LOGGER.info("任务删除完成,id :{}",workerJob.getId());
                         break;
+                    case UPDATE:
+                        LOGGER.info("任务开始更新,id :{}",workerJob.getId());
+                        JobOperator.updateJob(workerJob);
+                        LOGGER.info("任务更新完成,id :{}",workerJob.getId());
+                        break;
                 }
             }
             else{

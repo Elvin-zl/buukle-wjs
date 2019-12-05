@@ -5,6 +5,8 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.buukle.common.call.CommonResponse;
 import top.buukle.common.call.FuzzyResponse;
@@ -161,6 +163,7 @@ public class WorkerJobServiceImpl implements WorkerJobService{
      * @Date 2019/8/5
      */
     @Override
+    @Transactional (propagation = Propagation.REQUIRED,isolation= Isolation.DEFAULT ,rollbackFor = Exception.class)
     public CommonResponse saveOrEdit(WorkerJobQuery query, HttpServletRequest request, HttpServletResponse response) throws Exception {
         validateParamForSaveOrEdit(query);
         User operator = SessionUtil.getOperator(request, response);
@@ -197,6 +200,7 @@ public class WorkerJobServiceImpl implements WorkerJobService{
      * @Date 2019/12/5
      */
     @Override
+    @Transactional (propagation = Propagation.REQUIRED,isolation= Isolation.READ_UNCOMMITTED ,rollbackFor = Exception.class)
     public CommonResponse pauseOrResume(WorkerJobQuery query, HttpServletRequest request, HttpServletResponse response) throws Exception {
         User operator = SessionUtil.getOperator(request, response);
         WorkerJob workerJobDB = this.selectByPrimaryKeyForCrud(request, query.getId());
@@ -207,8 +211,8 @@ public class WorkerJobServiceImpl implements WorkerJobService{
             workerJobForUpdate.setStatus(workerJobDB.getStatus().equals(WorkerJobEnums.status.PAUSING.value()) ? WorkerJobEnums.status.EXECUTING.value():WorkerJobEnums.status.PAUSING.value());
             messageActivityEnum = workerJobDB.getStatus().equals(WorkerJobEnums.status.PAUSING.value()) ? MessageActivityEnum.RESUME : MessageActivityEnum.PAUSE;
             this.update(workerJobForUpdate,request,response);
-            // 翻转任务记录的状态
-            workerJobDB.setStatus(workerJobDB.getStatus().equals(WorkerJobEnums.status.PAUSING.value()) ? WorkerJobEnums.status.EXECUTING.value() : WorkerJobEnums.status.PAUSING.value() );
+            // 隔离级别为 READ_UNCOMMITTED ,所以这次查询回来记录状态应该是 最新的状态
+            workerJobDB = this.selectByPrimaryKeyForCrud(request, query.getId());
             WorkerJobClient.operateJob(operator.getUserId(),workerJobDB,messageActivityEnum);
             // 记录操作日志
             workerJobLogsService.log(operator,messageActivityEnum,query);
@@ -268,6 +272,7 @@ public class WorkerJobServiceImpl implements WorkerJobService{
      * @return
      */
     @Override
+    @Transactional (propagation = Propagation.REQUIRED,isolation= Isolation.DEFAULT ,rollbackFor = Exception.class)
     public CommonResponse save(BaseQuery query, HttpServletRequest request, HttpServletResponse response) {
         WorkerJob workerJob = this.assQueryForInsert((WorkerJobQuery) query, request, response);
         workerJobMapper.insert(workerJob);
@@ -284,6 +289,7 @@ public class WorkerJobServiceImpl implements WorkerJobService{
      * @return
      */
     @Override
+    @Transactional (propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     public CommonResponse update(BaseQuery query, HttpServletRequest request, HttpServletResponse response) {
         WorkerJobQuery workerJobQuery = ((WorkerJobQuery)query);
 
