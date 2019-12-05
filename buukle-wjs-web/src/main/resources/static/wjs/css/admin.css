@@ -2179,6 +2179,9 @@ body{
 .buukle-add-body{
   font-size: 13px !important;
 }
+.buukle-table-btn{
+  margin-top: 7px; !important;
+}
 .require {
   color: #ff0000cf;
 }

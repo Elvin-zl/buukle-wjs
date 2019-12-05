@@ -56,8 +56,10 @@ public class JobOperator {
             try {
                 if(!workerJob.getStatus().equals(WorkerJobEnums.status.PAUSING.value())){
                     SpringContextUtil.getBean(Scheduler.class).scheduleJob(jobDetail,trigger);
+                    LOGGER.info("创建定时任务成功 !参数 workerJob:{}", JsonUtil.toJSONString(workerJob));
+                }else{
+                    LOGGER.info("该任务状态为暂停 不在创建任务,当任务resunme时会尝试创建任务!参数 workerJob:{}", JsonUtil.toJSONString(workerJob));
                 }
-                LOGGER.info("创建定时任务成功 !参数 workerJob:{}", JsonUtil.toJSONString(workerJob));
             } catch (Exception e) {
                 e.printStackTrace();
                 LOGGER.info("创建定时任务失败 !参数 workerJob:{}", JsonUtil.toJSONString(workerJob));

@@ -3,6 +3,7 @@ package top.buukle.wjs.dao;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import top.buukle.security.plugin.annotation.DataIsolationAnnotation;
 import top.buukle.wjs.entity.WorkerJob;
 import top.buukle.wjs.entity.WorkerJobExample;
 
@@ -42,6 +43,7 @@ public interface WorkerJobMapper {
      *
      * @mbg.generated Thu Nov 28 21:27:15 CST 2019
      */
+    @DataIsolationAnnotation(tableName="worker_job")
     List<WorkerJob> selectByExample(WorkerJobExample example);
 
     /**

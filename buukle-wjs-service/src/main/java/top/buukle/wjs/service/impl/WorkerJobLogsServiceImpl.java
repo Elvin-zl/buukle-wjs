@@ -165,6 +165,7 @@ public class WorkerJobLogsServiceImpl implements WorkerJobLogsService{
             head.setOperator(operator.getUsername());
             MessageDTO messageDTO = new MessageDTO(head,update,null);
             workerJobLogs.setBak02(JsonUtil.toJSONString(messageDTO));
+            workerJobLogs.setId(null);
             workerJobLogsMapper.insert(workerJobLogs);
         }catch (Exception e){
             e.printStackTrace();

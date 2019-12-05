@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -17,6 +18,7 @@ import top.buukle.common.exception.CommonException;
 import top.buukle.common.message.MessageActivityEnum;
 import top.buukle.common.status.StatusConstants;
 import top.buukle.common.mvc.CommonMapper;
+import top.buukle.util.SpringContextUtil;
 import top.buukle.wjs .dao.WorkerJobMapper;
 import top.buukle.security.entity.User;
 import top.buukle.wjs .entity.WorkerJob;
@@ -165,26 +167,29 @@ public class WorkerJobServiceImpl implements WorkerJobService{
      * @Date 2019/8/5
      */
     @Override
-    @Transactional (propagation = Propagation.REQUIRED,isolation= Isolation.DEFAULT ,rollbackFor = Exception.class)
+    @Transactional (propagation = Propagation.REQUIRED,isolation= Isolation.READ_UNCOMMITTED ,rollbackFor = Exception.class)
     public CommonResponse saveOrEdit(WorkerJobQuery query, HttpServletRequest request, HttpServletResponse response) throws Exception {
         validateParamForSaveOrEdit(query);
         User operator = SessionUtil.getOperator(request, response);
+        query.setCreatorRoleId(SessionUtil.getUserRoleId(request, SpringContextUtil.getBean(Environment.class).getProperty("spring.application.name")).getId());
+        query.setCreator(operator.getUsername());
+        query.setCreatorCode(operator.getUserId());
         // 新增
         if(query.getId() == null){
-            CommonResponse commonResponse = this.save(query, request, response);
+            this.save(query, request, response);
             // 更新任务节点
-            WorkerJobClient.operateJob(operator.getUserId(),(WorkerJob) commonResponse.getBody(),MessageActivityEnum.INIT);
+            WorkerJob workerJobDB = this.selectByPrimaryKeyForCrud(request,query.getId());
+            WorkerJobClient.operateJob(operator.getUserId(),workerJobDB,MessageActivityEnum.INIT);
 
         }
         // 更新
         else{
-            WorkerJob workerJob = this.selectByPrimaryKeyForCrud(request, query.getId());
-            if(null != workerJob.getId()){
-                this.update(query,request,response);
-                WorkerJobClient.operateJob(operator.getUserId(),query,MessageActivityEnum.UPDATE);
-                return new CommonResponse.Builder().buildSuccess();
+            int i = workerJobMapper.updateByPrimaryKeySelective(query);
+            if(i == 1){
+                WorkerJob workerJobDB = this.selectByPrimaryKeyForCrud(request,query.getId());
+                WorkerJobClient.operateJob(operator.getUserId(),workerJobDB,MessageActivityEnum.UPDATE);
             }else{
-                throw new CommonException(BaseReturnEnum.FAILED,"操作任务失败,查询不到该任务,id:" + query.getId() + StringUtil.EMPTY);
+                throw new CommonException(BaseReturnEnum.FAILED,"操作任务失败,任务更新结果异常,id:" + query.getId() + StringUtil.EMPTY + " 条数 " + i);
             }
         }
         // 记录操作日志

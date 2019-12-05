@@ -43,23 +43,28 @@
 				<div class="layui-inline">
 					<!--详情按钮-->
 					<hp url="/wjs/workerJob/workerJobCrudView">
-						<div class="layui-btn layui-btn-sm layui-btn-normal editBtn" th:attr="data-id = ${workerJobRecord?.id}" data-url="/wjs/workerJob/workerJobCrudView"><i class="layui-icon">&#xe642;</i></div>
+						<div class="layui-btn layui-btn-sm layui-btn-normal buukle-table-btn editBtn" th:attr="data-id = ${workerJobRecord?.id}" data-url="/wjs/workerJob/workerJobCrudView">
+							<i class="layui-icon">&#xe642;</i>
+						</div>
 					</hp>
 					<!--删除按钮-->
 					<hp url="/wjs/workerJob/workerJobCrudJson">
-						<div class="layui-btn layui-btn-sm layui-btn-danger delOneBtn" th:attr="data-id = ${workerJobRecord?.id}" data-url="/wjs/workerJob/workerJobCrudJson"><i class="layui-icon">&#xe640;</i></div>
+						<div class="layui-btn layui-btn-sm layui-btn-danger buukle-table-btn delOneBtn" th:attr="data-id = ${workerJobRecord?.id}" data-url="/wjs/workerJob/workerJobCrudJson">
+							<i class="layui-icon">&#xe640;</i>
+						</div>
                     </hp>
 					<!--暂停/恢复按钮-->
-					<hp url="/workerJob/pauseOrResume">
-						<div class="layui-btn layui-btn-sm layui-btn-danger pauseOneBtn" th:attr="data-id = ${workerJobRecord?.id}" data-url="/workerJob/pauseOrResume">
+					<hp url="/workerJob/pauseOrResume" th:if="${workerJobRecord?.status} == 6 or ${workerJobRecord?.status} == 7">
+						<div class="layui-btn layui-btn-sm layui-btn-warm buukle-table-btn pauseOneBtn" th:attr="data-id = ${workerJobRecord?.id}" data-url="/workerJob/pauseOrResume">
 							<i class="layui-icon" th:text="${workerJobRecord?.status ==6 ? '&#xe9aa;' : '&#xe651;'}" ></i>
 							<span th:attr="id = 'pauseOne-' + ${workerJobRecord?.id}" th:text="${workerJobRecord?.status ==6 ? '恢复' : '暂停'}"> </span>
 						</div>
                     </hp>
 					<!--启动按钮-->
-					<hp url="/workerJob/init">
-						<div class="layui-btn layui-btn-sm layui-btn-danger initBtn" th:attr="data-id = ${workerJobRecord?.id}" data-url="/workerJob/init">
+					<hp url="/workerJob/init" th:if="${workerJobRecord?.status} == 3">
+						<div class="layui-btn layui-btn-sm layui-btn-normal buukle-table-btn initBtn" th:attr="data-id = ${workerJobRecord?.id}" data-url="/workerJob/init">
 							<i class="layui-icon"  >&#xe652;</i>
+							<span > 启动 </span>
 						</div>
                     </hp>
 				</div>
@@ -145,4 +150,3 @@
 		});
 	}
 </script>
-
