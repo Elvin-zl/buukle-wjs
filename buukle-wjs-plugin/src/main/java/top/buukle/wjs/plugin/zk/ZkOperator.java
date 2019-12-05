@@ -36,15 +36,14 @@ public class ZkOperator {
 
     /**
      * @description 创建节点 (临时)
-     * @param curatorFramework
      * @param path
      * @param bytes
      * @return void
      * @Author zhanglei1102
      * @Date 2019/9/11
      */
-    public static void createAndInitParentsIfNeededEphemeral(CuratorFramework curatorFramework, String path, byte[] bytes) throws Exception {
-        curatorFramework.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL).forPath(path, bytes);
+    public static void createAndInitParentsIfNeededEphemeral(String path, byte[] bytes) throws Exception {
+        SpringContextUtil.getBean(CuratorFramework.class).create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL).forPath(path, bytes);
     }
 
     /**
@@ -144,7 +143,7 @@ public class ZkOperator {
         int shardId = 1;
         for (String childPath : children) {
             try{
-                setData(SpringContextUtil.getBean(CuratorFramework.class),path + "/" + childPath,(shardId+StringUtil.EMPTY).getBytes());
+                setData(path + "/" + childPath,(shardId+StringUtil.EMPTY).getBytes());
                 LOGGER.info("节点 : {} 下子节点 {} 重新分片完成! ",path,childPath);
             }catch (Exception e){
                 LOGGER.info("节点 : {} 下子节点 {} 重新分片完成,分片索引无变化! ",path,childPath);
@@ -156,15 +155,14 @@ public class ZkOperator {
 
     /**
      * @description 更新节点数据
-     * @param curatorFramework
      * @param path
      * @param data
      * @return void
      * @Author elvin
      * @Date 2019/9/12
      */
-    public static void setData(CuratorFramework curatorFramework, String path, byte[] data) throws Exception {
-        curatorFramework.setData().forPath(path, data);
+    public static void setData(String path, byte[] data) throws Exception {
+        SpringContextUtil.getBean(CuratorFramework.class).setData().forPath(path, data);
     }
 
 
@@ -193,7 +191,7 @@ public class ZkOperator {
         if(checkExists(curatorFramework,path)){
             curatorFramework.delete().deletingChildrenIfNeeded().forPath(path);
         }
-        createAndInitParentsIfNeededEphemeral(curatorFramework,path,v);
+        createAndInitParentsIfNeededEphemeral(path,v);
     }
 
     /**

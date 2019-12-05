@@ -18,11 +18,12 @@ import top.buukle.util.SpringContextUtil;
 import top.buukle.util.StringUtil;
 import top.buukle.util.SystemUtil;
 import top.buukle.wjs.entity.WorkerJob;
+import top.buukle.wjs.entity.constants.WorkerJobEnums;
 import top.buukle.wjs.plugin.zk.ZkOperator;
 import top.buukle.wjs.plugin.zk.constants.ZkConstants;
 
 /**
- * @description 〈〉
+ * @description 〈任务操作类〉
  * @author zhanglei1102
  * @create 2019/9/9
  * @since 1.0.0
@@ -53,29 +54,29 @@ public class JobOperator {
             CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(workerJob.getId()+"").withSchedule(scheduleBuilder).build();
             jobDetail.getJobDataMap().put(JOB_PARAM_KEY, workerJob);
             try {
-                SpringContextUtil.getBean(Scheduler.class).scheduleJob(jobDetail,trigger);
+                if(!workerJob.getStatus().equals(WorkerJobEnums.status.PAUSING.value())){
+                    SpringContextUtil.getBean(Scheduler.class).scheduleJob(jobDetail,trigger);
+                }
                 LOGGER.info("创建定时任务成功 !参数 workerJob:{}", JsonUtil.toJSONString(workerJob));
             } catch (Exception e) {
                 e.printStackTrace();
                 LOGGER.info("创建定时任务失败 !参数 workerJob:{}", JsonUtil.toJSONString(workerJob));
             }
         }else{
-            JobOperator.updateJob(SpringContextUtil.getBean(CuratorFramework.class),workerJob,SpringContextUtil.getBean(Scheduler.class));
+            JobOperator.updateJob(workerJob);
         }
     }
 
     /**
      * @description 更新任务
-     * @param curatorFramework
      * @param workerJob
-     * @param scheduler
      * @return void
      * @Author zhanglei1102
      * @Date 2019/11/29
      */
-    public static void updateJob( CuratorFramework curatorFramework, WorkerJob workerJob, Scheduler scheduler) {
+    public static void updateJob( WorkerJob workerJob) {
         LOGGER.info("更新定时任务开始,参数 workerJob:{}", JsonUtil.toJSONString(workerJob));
-        CronTrigger cronTrigger = getCronTrigger(scheduler, workerJob.getId());
+        CronTrigger cronTrigger = getCronTrigger( SpringContextUtil.getBean(Scheduler.class), workerJob.getId());
         TriggerKey triggerKey = TriggerKey.triggerKey(workerJob.getId() + "");
         // 集群执行的话,需要创建新的任务
         if(cronTrigger == null){
@@ -86,7 +87,7 @@ public class JobOperator {
         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(workerJob.getCronExpression()).withMisfireHandlingInstructionFireAndProceed();
         CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(workerJob.getId()+"").withSchedule(scheduleBuilder).build();
         try {
-            scheduler.rescheduleJob(triggerKey,trigger);
+            SpringContextUtil.getBean(Scheduler.class).rescheduleJob(triggerKey,trigger);
             LOGGER.info("更新定时任务成功,参数 workerJob:{}", JsonUtil.toJSONString(workerJob));
         } catch (SchedulerException e) {
             e.printStackTrace();
@@ -139,15 +140,23 @@ public class JobOperator {
      */
     public static void resumeJob(WorkerJob workerJob ) {
         try {
-            LOGGER.info("暂停定时任务开始,参数 workerJob:{}", JsonUtil.toJSONString(workerJob));
-            SpringContextUtil.getBean(Scheduler.class).resumeJob(new JobKey(workerJob.getId() + ""));
-            LOGGER.info("暂停定时任务成功,参数 workerJob:{}", JsonUtil.toJSONString(workerJob));
+            LOGGER.info("恢复定时任务开始,参数 workerJob:{}", JsonUtil.toJSONString(workerJob));
+            JobDetail jobDetail = SpringContextUtil.getBean(Scheduler.class).getJobDetail(new JobKey(workerJob.getId() + ""));
+            if(null == jobDetail){
+                LOGGER.info("恢复定时任务时,本地没有找到该任务,开始尝试创建任务,参数 id:{}", workerJob.getId());
+                createJob(workerJob);
+                LOGGER.info("恢复定时任务时,本地没有找到该任务,尝试创建任务完成,参数 id:{}", workerJob.getId());
+            }else{
+                LOGGER.info("恢复定时任务时,本地找到该任务,开始尝试恢复该任务,参数 id:{}", workerJob.getId());
+                SpringContextUtil.getBean(Scheduler.class).resumeJob(new JobKey(workerJob.getId() + ""));
+                LOGGER.info("恢复定时任务时,本地找到该任务,尝试恢复该任务完成,参数 id:{}", workerJob.getId());
+            }
+            LOGGER.info("恢复定时任务成功,参数 id:{}", workerJob.getId());
         } catch (SchedulerException e) {
             e.printStackTrace();
-            LOGGER.info("暂停定时任务失败,参数 workerJob:{}", JsonUtil.toJSONString(workerJob));
+            LOGGER.info("恢复定时任务出现异常,原因:{},参数 workerJob:{}", e.getMessage(),JsonUtil.toJSONString(workerJob));
         }
     }
-
 
     /**
      * @description 获取表达式触发器
@@ -184,7 +193,7 @@ public class JobOperator {
                 // 直接在zk上抢占资源
                 try{
                     LOGGER.info("开始抢占zk节点资源,任务id : {}",workerJob.getId());
-                    ZkOperator.createAndInitParentsIfNeededEphemeral(curatorFramework,lockPath, SystemUtil.ipPid().getBytes());
+                    ZkOperator.createAndInitParentsIfNeededEphemeral(lockPath, SystemUtil.ipPid().getBytes());
                     LOGGER.info("抢占zk节点资源成功,任务id : {}",workerJob.getId());
                     return true;
                 }

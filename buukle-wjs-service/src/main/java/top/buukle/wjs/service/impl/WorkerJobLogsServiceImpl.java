@@ -2,12 +2,17 @@ package top.buukle.wjs .service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.buukle.common.call.CommonResponse;
 import top.buukle.common.call.FuzzyResponse;
 import top.buukle.common.call.PageResponse;
 import top.buukle.common.call.vo.FuzzyVo;
+import top.buukle.common.log.BaseLogger;
+import top.buukle.common.message.MessageActivityEnum;
+import top.buukle.common.message.MessageDTO;
+import top.buukle.common.message.MessageHead;
 import top.buukle.common.status.StatusConstants;
 import top.buukle.common.mvc.CommonMapper;
 import top.buukle.wjs .dao.WorkerJobLogsMapper;
@@ -17,6 +22,7 @@ import top.buukle.wjs .entity.WorkerJobLogsExample;
 import top.buukle.common.mvc.BaseQuery;
 import top.buukle.wjs .entity.vo.WorkerJobLogsQuery;
 import top.buukle.security.plugin.util.SessionUtil;
+import top.buukle.wjs.entity.vo.WorkerJobQuery;
 import top.buukle.wjs .service.WorkerJobLogsService;
 import top.buukle.wjs .service.constants.SystemReturnEnum;
 import top.buukle.wjs .entity.constants.WorkerJobLogsEnums;
@@ -28,10 +34,7 @@ import top.buukle.util.StringUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
 * @author elvin
@@ -46,6 +49,7 @@ public class WorkerJobLogsServiceImpl implements WorkerJobLogsService{
     @Autowired
     private CommonMapper commonMapper;
 
+    private final static BaseLogger LOGGER = BaseLogger.getLogger(WorkerJobLogsServiceImpl.class);
     /**
      * 分页获取列表
      * @param query 查询对象
@@ -143,6 +147,23 @@ public class WorkerJobLogsServiceImpl implements WorkerJobLogsService{
             this.update(query,request,response);
         }
         return new CommonResponse.Builder().buildSuccess();
+    }
+
+    @Override
+    public void log(User operator, MessageActivityEnum update, WorkerJobQuery query) {
+        try{
+            WorkerJobLogs workerJobLogs = new WorkerJobLogs();
+            BeanUtils.copyProperties(query,workerJobLogs);
+            MessageHead head = new MessageHead();
+            head.setOperatorId(operator.getUserId());
+            head.setOperator(operator.getUsername());
+            MessageDTO messageDTO = new MessageDTO(head,update,null);
+            workerJobLogs.setBak02(JsonUtil.toJSONString(messageDTO));
+            workerJobLogsMapper.insert(workerJobLogs);
+        }catch (Exception e){
+            e.printStackTrace();
+            LOGGER.error("记录日志出现异常, 原因 :{}",e.getMessage());
+        }
     }
 
     /**

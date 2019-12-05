@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import top.buukle.util.SpringContextUtil;
 import top.buukle.util.StringUtil;
 import top.buukle.util.SystemUtil;
 import top.buukle.common.log.BaseLogger;
@@ -40,12 +41,9 @@ public class ZkInitial {
     @Autowired
     CuratorFramework curatorFramework;
 
-    @Autowired
-    private Environment env;
-
     public void init() throws Exception {
         // 声明应用父节点
-        String appParentPath = ZkConstants.BUUKLE_WJS_APP_PARENT_NODE + StringUtil.BACKSLASH + env.getProperty("spring.application.name");
+        String appParentPath = ZkConstants.BUUKLE_WJS_APP_PARENT_NODE + StringUtil.BACKSLASH + SpringContextUtil.getBean(Environment.class).getProperty("spring.application.name");
         // 不存在则创建父节点
         if(!ZkOperator.checkExists(curatorFramework,appParentPath)){
             try{
@@ -55,7 +53,7 @@ public class ZkInitial {
             }
         }
         // 订阅应用父节点
-        ZkOperator.subscribe(curatorFramework,new ApplicationListener(appParentPath,env.getProperty("spring.application.name")));
+        ZkOperator.subscribe(curatorFramework,new ApplicationListener(appParentPath,SpringContextUtil.getBean(Environment.class).getProperty("spring.application.name")));
         // 开启自动选举
         ZkOperator.leaderLatch(curatorFramework,appParentPath, null);
         // 强制重新创建应用子节点
@@ -69,7 +67,7 @@ public class ZkInitial {
             }
         }
         // 声明任务父节点
-        String jobParentPath = ZkConstants.BUUKLE_WJS_JOB_PARENT_NODE + StringUtil.BACKSLASH + env.getProperty("spring.application.name");
+        String jobParentPath = ZkConstants.BUUKLE_WJS_JOB_PARENT_NODE + StringUtil.BACKSLASH + SpringContextUtil.getBean(Environment.class).getProperty("spring.application.name");
         // 不存在则创建父节点
         if(!ZkOperator.checkExists(curatorFramework,jobParentPath)){
             try{
@@ -79,6 +77,6 @@ public class ZkInitial {
             }
         }
         // 订阅任务父节点
-        ZkOperator.subscribe(curatorFramework,new JobListener(jobParentPath,env.getProperty("spring.application.name")));
+        ZkOperator.subscribe(curatorFramework,new JobListener(jobParentPath,SpringContextUtil.getBean(Environment.class).getProperty("spring.application.name")));
     }
 }

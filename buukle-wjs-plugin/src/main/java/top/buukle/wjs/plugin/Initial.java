@@ -10,8 +10,6 @@
  */
 package top.buukle.wjs.plugin;
 
-import org.apache.curator.framework.CuratorFramework;
-import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -23,22 +21,18 @@ import top.buukle.common.call.PageResponse;
 import top.buukle.common.call.code.BaseReturnEnum;
 import top.buukle.common.exception.CommonException;
 import top.buukle.common.message.MessageActivityEnum;
-import top.buukle.common.message.MessageDTO;
-import top.buukle.common.message.MessageHead;
 import top.buukle.util.JsonUtil;
+import top.buukle.util.SpringContextUtil;
 import top.buukle.util.StringUtil;
 import top.buukle.common.log.BaseLogger;
 import top.buukle.wjs.entity.WorkerJob;
 import top.buukle.wjs.entity.constants.WorkerJobEnums;
 import top.buukle.wjs.entity.vo.WorkerJobQuery;
+import top.buukle.wjs.plugin.client.WorkerJobClient;
 import top.buukle.wjs.plugin.invoker.WorkerJobInvoker;
 import top.buukle.wjs.plugin.zk.ZkInitial;
-import top.buukle.wjs.plugin.zk.ZkOperator;
-import top.buukle.wjs.plugin.zk.constants.ZkConstants;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -58,11 +52,7 @@ public class Initial implements ApplicationRunner {
     @Autowired
     private ZkInitial listenerInitial;
     @Autowired
-    CuratorFramework curatorFramework;
-    @Autowired
     private WorkerJobInvoker workerJobInvoker;
-    @Autowired
-    private Environment env;
 
     @Override
     public void run(ApplicationArguments args){
@@ -75,9 +65,12 @@ public class Initial implements ApplicationRunner {
             // 初始化并订阅节点异常重试
             listenerInitialWithoutException();
             // 查询定时任务
-            CommonRequest<WorkerJobQuery> commonRequest = new CommonRequest.Builder().build(env.getProperty("spring.application.name"));
+            CommonRequest<WorkerJobQuery> commonRequest = new CommonRequest.Builder().build(SpringContextUtil.getBean(Environment.class).getProperty("spring.application.name"));
             WorkerJobQuery workerJobQuery =new WorkerJobQuery();
-            workerJobQuery.setStates(WorkerJobEnums.status.PUBLISED.value().toString());
+            StringBuilder statesSb = new StringBuilder(WorkerJobEnums.status.PAUSING.value().toString());
+            statesSb.append(StringUtil.COMMA);
+            statesSb.append(WorkerJobEnums.status.EXECUTING.value().toString());
+            workerJobQuery.setStates(statesSb.toString());
             workerJobQuery.setPageSize(500);
             commonRequest.setBody(workerJobQuery);
             // 异常加载重试
@@ -186,30 +179,15 @@ public class Initial implements ApplicationRunner {
      * @Author zhanglei1102
      * @Date 2019/11/29
      */
-    private void createJobsNode(List<LinkedHashMap> list) {
+    private static void createJobsNode(List<LinkedHashMap> list) {
         // 声明任务节点路径
         String path = null;
         for (LinkedHashMap map  : list) {
             WorkerJob workerJob = new WorkerJob();
-           try{
-               workerJob = JsonUtil.parseObject(JsonUtil.toJSONString(map),WorkerJob.class);
-               // 初始化任务节点路径
-               path =  // 任务总目录层
-                       ZkConstants.BUUKLE_WJS_JOB_PARENT_NODE +
-                       // 应用目录
-                       StringUtil.BACKSLASH + env.getProperty("spring.application.name") +
-                       // 任务类型层
-                       StringUtil.BACKSLASH + workerJob.getExecuteType() +
-                       // 任务id目录层       -- 此层 data 为该任务的ipPid
-                       StringUtil.BACKSLASH + workerJob.getId();
-               LOGGER.info("尝试在zk创建任务节点,id : {},path :{}",workerJob.getId(),path);
-               MessageHead head = new MessageHead();
-               head.setApplicationName(env.getProperty("spring.application.name"));
-               head.setOperationTime(new Date());
-               MessageDTO messageDTO = new MessageDTO(head, MessageActivityEnum.INIT,workerJob);
-               ZkOperator.createAndInitParentsIfNeededEphemeral(curatorFramework,path,JsonUtil.toJSONString(messageDTO).getBytes());
-               LOGGER.info("在zk创建任务节点完成,id : {},path :{}",workerJob.getId(),path);
-           }catch (Exception e){
+            try{
+                workerJob = JsonUtil.parseObject(JsonUtil.toJSONString(map),WorkerJob.class);
+                path = WorkerJobClient.operateJob(SpringContextUtil.getBean(Environment.class).getProperty("spring.application.name"),workerJob,MessageActivityEnum.INIT);
+            }catch (Exception e){
                // 此处可用 exist 检查一下 , 因为没有合适的触达插件, 这里按照已创建处理
                LOGGER.info("在zk创建任务节点异常,原因 :{} ,id : {},path :{}",e.getMessage(),workerJob.getId(),path);
            }

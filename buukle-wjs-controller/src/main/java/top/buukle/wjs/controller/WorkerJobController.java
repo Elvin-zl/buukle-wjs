@@ -49,4 +49,30 @@ public class WorkerJobController {
     public CommonResponse saveOrEdit(WorkerJobQuery query, HttpServletRequest request, HttpServletResponse response) throws Exception {
         return workerJobService.saveOrEdit(query,request,response);
     }
+    /**
+    * @description 暂停或恢复
+    * @param query
+    * @param request
+    * @return top.buukle.common.call.CommonResponse
+    * @Author elvin
+    * @Date 2019/8/5
+    */
+    @RequestMapping("/pauseOrResume")
+    @ResponseBody
+    public CommonResponse pauseOrResume(WorkerJobQuery query, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return workerJobService.pauseOrResume(query,request,response);
+    }
+    /**
+    * @description 开启任务
+    * @param query
+    * @param request
+    * @return top.buukle.common.call.CommonResponse
+    * @Author elvin
+    * @Date 2019/8/5
+    */
+    @RequestMapping("/init")
+    @ResponseBody
+    public CommonResponse init(WorkerJobQuery query, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return workerJobService.init(query,request,response);
+    }
 }

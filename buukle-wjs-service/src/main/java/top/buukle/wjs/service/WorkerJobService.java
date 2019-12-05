@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 */
 public interface WorkerJobService extends BaseService{
 
-    CommonResponse saveOrEdit(WorkerJobQuery query, HttpServletRequest request, HttpServletResponse response);
+    CommonResponse saveOrEdit(WorkerJobQuery query, HttpServletRequest request, HttpServletResponse response) throws Exception;
 
+    CommonResponse pauseOrResume(WorkerJobQuery query, HttpServletRequest request, HttpServletResponse response) throws Exception;
+
+    CommonResponse init(WorkerJobQuery query, HttpServletRequest request, HttpServletResponse response) throws Exception;
 }

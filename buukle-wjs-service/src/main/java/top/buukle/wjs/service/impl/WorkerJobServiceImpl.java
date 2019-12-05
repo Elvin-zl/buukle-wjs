@@ -2,12 +2,17 @@ package top.buukle.wjs .service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.buukle.common.call.CommonResponse;
 import top.buukle.common.call.FuzzyResponse;
 import top.buukle.common.call.PageResponse;
+import top.buukle.common.call.code.BaseReturnEnum;
 import top.buukle.common.call.vo.FuzzyVo;
+import top.buukle.common.exception.CommonException;
+import top.buukle.common.message.MessageActivityEnum;
 import top.buukle.common.status.StatusConstants;
 import top.buukle.common.mvc.CommonMapper;
 import top.buukle.wjs .dao.WorkerJobMapper;
@@ -17,6 +22,8 @@ import top.buukle.wjs .entity.WorkerJobExample;
 import top.buukle.common.mvc.BaseQuery;
 import top.buukle.wjs .entity.vo.WorkerJobQuery;
 import top.buukle.security.plugin.util.SessionUtil;
+import top.buukle.wjs.plugin.client.WorkerJobClient;
+import top.buukle.wjs.service.WorkerJobLogsService;
 import top.buukle.wjs .service.WorkerJobService;
 import top.buukle.wjs .service.constants.SystemReturnEnum;
 import top.buukle.wjs.entity.constants.WorkerJobEnums;
@@ -44,6 +51,9 @@ public class WorkerJobServiceImpl implements WorkerJobService{
     private WorkerJobMapper workerJobMapper;
 
     @Autowired
+    private WorkerJobLogsService workerJobLogsService;
+
+    @Autowired
     private CommonMapper commonMapper;
 
     /**
@@ -57,21 +67,6 @@ public class WorkerJobServiceImpl implements WorkerJobService{
         List<WorkerJob> list = workerJobMapper.selectByExample(this.assExampleForList(((WorkerJobQuery)query)));
         PageInfo<WorkerJob> pageInfo = new PageInfo<>(list);
         return new PageResponse.Builder().build(list,pageInfo.getPageNum(),pageInfo.getPageSize(),pageInfo.getTotal());
-    }
-
-    /**
-     * 根据id删除记录状态数据
-     * @param id 删除数据实例
-     * @param request httpServletRequest
-     * @param response
-     * @return
-     */
-    @Override
-    public CommonResponse delete(Integer id, HttpServletRequest request, HttpServletResponse response) {
-        if(workerJobMapper.updateByPrimaryKeySelective(this.assQueryForUpdateStatus(id, WorkerJobEnums.status.DELETED.value(),request,response)) != 1){
-            throw new SystemException(SystemReturnEnum.DELETE_INFO_EXCEPTION);
-        }
-        return new CommonResponse.Builder().buildSuccess();
     }
 
     /**
@@ -123,6 +118,40 @@ public class WorkerJobServiceImpl implements WorkerJobService{
     }
 
     /**
+     * 根据id删除记录状态数据
+     * @param id 删除数据实例
+     * @param request httpServletRequest
+     * @param response
+     * @return
+     */
+    @Override
+    public CommonResponse delete(Integer id, HttpServletRequest request, HttpServletResponse response){
+
+        User operator = SessionUtil.getOperator(request, response);
+        WorkerJob workerJobDB = this.selectByPrimaryKeyForCrud(request, id);
+        if(null != workerJobDB.getId()){
+            WorkerJobQuery workerJobForUpdate = new WorkerJobQuery();
+            workerJobForUpdate.setId(id);
+            workerJobForUpdate.setStatus(workerJobDB.getStatus().equals(WorkerJobEnums.status.PAUSING.value()) ? WorkerJobEnums.status.EXECUTING.value():WorkerJobEnums.status.PAUSING.value());
+            if(workerJobMapper.updateByPrimaryKeySelective(this.assQueryForUpdateStatus(id, WorkerJobEnums.status.DELETED.value(),request,response)) != 1){
+                throw new SystemException(SystemReturnEnum.DELETE_INFO_EXCEPTION);
+            }
+            try {
+                WorkerJobClient.operateJob(operator.getUserId(),workerJobDB,MessageActivityEnum.DELETE);
+            } catch (Exception e) {
+                throw new CommonException(BaseReturnEnum.FAILED,"zk删除任务失败,id: " + id);
+            }
+            // 记录操作日志
+            WorkerJobQuery workerJobQuery = new WorkerJobQuery();
+            BeanUtils.copyProperties(workerJobDB,workerJobQuery);
+            workerJobLogsService.log(operator,MessageActivityEnum.DELETE,workerJobQuery);
+            return new CommonResponse.Builder().buildSuccess();
+        }else{
+            throw new CommonException(BaseReturnEnum.FAILED,"操作任务失败,查询不到该任务,id:" + StringUtil.EMPTY);
+        }
+    }
+
+    /**
      * @description 新增或者修改
      * @param query
      * @param request
@@ -132,17 +161,88 @@ public class WorkerJobServiceImpl implements WorkerJobService{
      * @Date 2019/8/5
      */
     @Override
-    public CommonResponse saveOrEdit(WorkerJobQuery query, HttpServletRequest request, HttpServletResponse response) {
+    public CommonResponse saveOrEdit(WorkerJobQuery query, HttpServletRequest request, HttpServletResponse response) throws Exception {
         validateParamForSaveOrEdit(query);
+        User operator = SessionUtil.getOperator(request, response);
         // 新增
         if(query.getId() == null){
-            this.save(query,request,response);
+            CommonResponse commonResponse = this.save(query, request, response);
+            // 更新任务节点
+            WorkerJobClient.operateJob(operator.getUserId(),(WorkerJob) commonResponse.getBody(),MessageActivityEnum.INIT);
+
         }
         // 更新
         else{
-            this.update(query,request,response);
+            WorkerJob workerJob = this.selectByPrimaryKeyForCrud(request, query.getId());
+            if(null != workerJob.getId()){
+                this.update(query,request,response);
+                WorkerJobClient.operateJob(operator.getUserId(),query,MessageActivityEnum.UPDATE);
+                return new CommonResponse.Builder().buildSuccess();
+            }else{
+                throw new CommonException(BaseReturnEnum.FAILED,"操作任务失败,查询不到该任务,id:" + query.getId() + StringUtil.EMPTY);
+            }
         }
+        // 记录操作日志
+        workerJobLogsService.log(operator,MessageActivityEnum.UPDATE,query);
         return new CommonResponse.Builder().buildSuccess();
+    }
+
+    /**
+     * @description 暂停或启动任务
+     * @param query
+     * @param request
+     * @param response
+     * @return top.buukle.common.call.CommonResponse
+     * @Author zhanglei1102
+     * @Date 2019/12/5
+     */
+    @Override
+    public CommonResponse pauseOrResume(WorkerJobQuery query, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        User operator = SessionUtil.getOperator(request, response);
+        WorkerJob workerJobDB = this.selectByPrimaryKeyForCrud(request, query.getId());
+        MessageActivityEnum messageActivityEnum;
+        if(null != workerJobDB.getId()){
+            WorkerJobQuery workerJobForUpdate = new WorkerJobQuery();
+            workerJobForUpdate.setId(query.getId());
+            workerJobForUpdate.setStatus(workerJobDB.getStatus().equals(WorkerJobEnums.status.PAUSING.value()) ? WorkerJobEnums.status.EXECUTING.value():WorkerJobEnums.status.PAUSING.value());
+            messageActivityEnum = workerJobDB.getStatus().equals(WorkerJobEnums.status.PAUSING.value()) ? MessageActivityEnum.RESUME : MessageActivityEnum.PAUSE;
+            this.update(workerJobForUpdate,request,response);
+            // 翻转任务记录的状态
+            workerJobDB.setStatus(workerJobDB.getStatus().equals(WorkerJobEnums.status.PAUSING.value()) ? WorkerJobEnums.status.EXECUTING.value() : WorkerJobEnums.status.PAUSING.value() );
+            WorkerJobClient.operateJob(operator.getUserId(),workerJobDB,messageActivityEnum);
+            // 记录操作日志
+            workerJobLogsService.log(operator,messageActivityEnum,query);
+            return new CommonResponse.Builder().buildSuccess();
+        }else{
+            throw new CommonException(BaseReturnEnum.FAILED,"操作任务失败,查询不到该任务,id:" + query.getId() + StringUtil.EMPTY);
+        }
+    }
+
+    /**
+     * @description 开启任务
+     * @param query
+     * @param request
+     * @param response
+     * @return top.buukle.common.call.CommonResponse
+     * @Author zhanglei1102
+     * @Date 2019/12/5
+     */
+    @Override
+    public CommonResponse init(WorkerJobQuery query, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        User operator = SessionUtil.getOperator(request, response);
+        WorkerJob workerJobDB = this.selectByPrimaryKeyForCrud(request, query.getId());
+        if(null != workerJobDB.getId()){
+            WorkerJobQuery workerJobForUpdate = new WorkerJobQuery();
+            workerJobForUpdate.setId(query.getId());
+            workerJobForUpdate.setStatus(WorkerJobEnums.status.EXECUTING.value());
+            this.update(workerJobForUpdate,request,response);
+            WorkerJobClient.operateJob(operator.getUserId(),workerJobDB,MessageActivityEnum.INIT);
+            // 记录操作日志
+            workerJobLogsService.log(operator,MessageActivityEnum.INIT,query);
+            return new CommonResponse.Builder().buildSuccess();
+        }else{
+            throw new CommonException(BaseReturnEnum.FAILED,"操作任务失败,查询不到该任务,id:" + query.getId() + StringUtil.EMPTY);
+        }
     }
 
     /**
@@ -169,9 +269,11 @@ public class WorkerJobServiceImpl implements WorkerJobService{
      */
     @Override
     public CommonResponse save(BaseQuery query, HttpServletRequest request, HttpServletResponse response) {
-
-        workerJobMapper.insert(this.assQueryForInsert((WorkerJobQuery)query,request,response));
-        return new CommonResponse.Builder().buildSuccess();
+        WorkerJob workerJob = this.assQueryForInsert((WorkerJobQuery) query, request, response);
+        workerJobMapper.insert(workerJob);
+        CommonResponse commonResponse = new CommonResponse.Builder().buildSuccess();
+        commonResponse.setBody(workerJob);
+        return commonResponse;
     }
 
     /**
@@ -260,6 +362,9 @@ public class WorkerJobServiceImpl implements WorkerJobService{
         }
         if(StringUtil.isNotEmpty(query.getEndTime())){
             criteria.andGmtCreatedLessThanOrEqualTo(DateUtil.parse(query.getEndTime()));
+        }
+        if(StringUtil.isNotEmpty(query.getBak01())){
+            criteria.andBak01EqualTo(query.getBak01());
         }
         if(null != query.getApplicationId()){
             criteria.andApplicationIdEqualTo(query.getApplicationId());

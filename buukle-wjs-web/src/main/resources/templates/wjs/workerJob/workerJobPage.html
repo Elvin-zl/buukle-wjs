@@ -49,11 +49,17 @@
 					<hp url="/wjs/workerJob/workerJobCrudJson">
 						<div class="layui-btn layui-btn-sm layui-btn-danger delOneBtn" th:attr="data-id = ${workerJobRecord?.id}" data-url="/wjs/workerJob/workerJobCrudJson"><i class="layui-icon">&#xe640;</i></div>
                     </hp>
-					<!--暂停按钮-->
-					<hp url="/workerJob/pause">
-						<div class="layui-btn layui-btn-sm layui-btn-danger pauseOneBtn" th:attr="data-id = ${workerJobRecord?.id}" data-url="/workerJob/pause">
-							<i class="layui-icon" th:text="${workerJobRecord?.status ==6 ? '&#xe652;' : '&#xe651;'}" ></i>
-							<span th:attr="id = 'pauseOne-' + ${workerJobRecord?.id}" th:text="${workerJobRecord?.status ==6 ? '启动' : '暂停'}"> </span>
+					<!--暂停/恢复按钮-->
+					<hp url="/workerJob/pauseOrResume">
+						<div class="layui-btn layui-btn-sm layui-btn-danger pauseOneBtn" th:attr="data-id = ${workerJobRecord?.id}" data-url="/workerJob/pauseOrResume">
+							<i class="layui-icon" th:text="${workerJobRecord?.status ==6 ? '&#xe9aa;' : '&#xe651;'}" ></i>
+							<span th:attr="id = 'pauseOne-' + ${workerJobRecord?.id}" th:text="${workerJobRecord?.status ==6 ? '恢复' : '暂停'}"> </span>
+						</div>
+                    </hp>
+					<!--启动按钮-->
+					<hp url="/workerJob/init">
+						<div class="layui-btn layui-btn-sm layui-btn-danger initBtn" th:attr="data-id = ${workerJobRecord?.id}" data-url="/workerJob/init">
+							<i class="layui-icon"  >&#xe652;</i>
 						</div>
                     </hp>
 				</div>
@@ -77,6 +83,39 @@
 			var userId=$(this).attr('data-userId');
 			url = url + "?id=" + $(this).attr('data-id') + ((userId =="" || userId==undefined) ? "" : "&userId=" + userId);
 			var operation = $('#pauseOne-' + $(this).attr('data-id')).html();
+			dialog.confirm({
+				message:'您确定'+ operation +'本条记录吗？',
+				success:function(){
+					banThis($(this), operation +'中..');
+					var thisObj =  $(this);
+					$.ajax({
+						url : url,
+						method : 'post',
+						dataType : 'json',
+						success : function (data) {
+							if(data.head.status=='S'){
+								layer.msg( operation +'成功!');
+								reLoad();
+								$('#refresh').click();
+							}else{
+								layer.msg(data.head.msg);
+							}
+							releaseThis(thisObj,operation);
+						}
+					})
+				},
+				cancel:function(){
+					layer.msg('您取消了'+ operation +'本条记录操作')
+				}
+			});
+			return false;
+		});
+		// 绑定启动按钮
+		$('.initBtn').off().on('click', function() {
+			var url=$(this).attr('data-url');
+			var userId=$(this).attr('data-userId');
+			url = url + "?id=" + $(this).attr('data-id') + ((userId =="" || userId==undefined) ? "" : "&userId=" + userId);
+			var operation = '启动';
 			dialog.confirm({
 				message:'您确定'+ operation +'本条记录吗？',
 				success:function(){
