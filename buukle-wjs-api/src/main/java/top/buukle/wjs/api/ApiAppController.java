@@ -50,7 +50,7 @@ public class ApiAppController {
     @RequestMapping("/getApplicationWorkerJob")
     @ResponseBody
     PageResponse getApplicationWorkerJob(@RequestBody CommonRequest<WorkerJobQuery> request){
-        request.getBody().setBak01(request.getHead().getApplicationName());
+        request.getBody().setBak01(request.getHead().getApplicationCode());
         return workerJobService.getPage(request.getBody());
     }
 
