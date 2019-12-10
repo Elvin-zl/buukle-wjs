@@ -171,7 +171,7 @@ public class WorkerJobServiceImpl implements WorkerJobService{
     public CommonResponse saveOrEdit(WorkerJobQuery query, HttpServletRequest request, HttpServletResponse response) throws Exception {
         validateParamForSaveOrEdit(query);
         User operator = SessionUtil.getOperator(request, response);
-        query.setCreatorRoleId(SessionUtil.getUserRoleIdByAppCode(request, SpringContextUtil.getBean(Environment.class).getProperty("spring.application.name")).getId());
+        query.setCreatorRoleId(SessionUtil.getUserTopRoleLevel(request, SpringContextUtil.getBean(Environment.class).getProperty("spring.application.name")));
         query.setCreator(operator.getUsername());
         query.setCreatorCode(operator.getUserId());
         // 新增
