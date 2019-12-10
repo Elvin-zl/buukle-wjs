@@ -43,7 +43,7 @@ public class ApiAppController {
     /**
      * @description 获取app所拥有的定时任务
      * @param request
-     * @return top.buukle.common.call.AppResourceResponse
+     * @return top.buukle.security.entity.common.AppResourceResponse
      * @Author zhanglei1102
      * @Date 2019/9/9
      */
