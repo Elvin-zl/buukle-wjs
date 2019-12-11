@@ -43,7 +43,7 @@ public interface WorkerJobMapper {
      *
      * @mbg.generated Thu Nov 28 21:27:15 CST 2019
      */
-    @DataIsolationAnnotation(tableName="worker_job")
+    @DataIsolationAnnotation(tableName="worker_job",dimensionFieldName = "creator_role_id")
     List<WorkerJob> selectByExample(WorkerJobExample example);
 
     /**
