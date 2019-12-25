@@ -55,7 +55,7 @@ spring:
 ##clould注册中心 eureka 配置
 eureka:
   instance:
-    hostname: 127.0.0.1
+    hostname: 192.168.254.27
     prefer-ip-address: true
     serverport: 9090
   client:
