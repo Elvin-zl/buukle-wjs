@@ -96,7 +96,6 @@
 					</div>
 					<div class="layui-form-item">
 						<label class="layui-form-label">
-							<i class="require">*</i>
 							ip组：
 						</label>
 						<div class="layui-input-block">
@@ -180,14 +179,12 @@
 					beanReferenceName:"required",
 					cronExpression:"required",
 					timeOut:{required:true,digits:true},
-					ipGroup:{required:true},
 				},
 				messages:{
 					description:"请正确输入任务名(4位以上)",
 					beanReferenceName:"请正确输入接口路径名",
 					cronExpression:"请正确输入cron表达式",
 					timeOut:"请正确输入超时时间(正整数)",
-					ipGroup:"请正确输入ip分组",
 				}
 			});
 			/** 本地校验*/

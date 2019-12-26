@@ -44,6 +44,7 @@ public class JobOperator {
     public static void createJob( WorkerJob workerJob){
         LOGGER.info("创建定时任务参数开始, workerJob:{}", JsonUtil.toJSONString(workerJob));
         String ip = SystemUtil.getIp();
+        LOGGER.info("创建定时任务时,获取到本机ip:{}", ip);
         if(!handleLock(SpringContextUtil.getBean(CuratorFramework.class),ip,workerJob)){
             return;
         }
