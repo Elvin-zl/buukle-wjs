@@ -6,7 +6,7 @@ server:
     uri-encoding: utf-8
 ##日志配置
 logging:
-  config: classpath:config/spring/springBoot-logbak-local.xml
+  config: classpath:config/spring/springBoot-logbak-prod.xml
 ##spring生态配置
 spring:
   ##引入
