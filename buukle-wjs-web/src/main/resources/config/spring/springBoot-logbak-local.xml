@@ -43,7 +43,7 @@
                 <pattern>%p%d%msg%M%F{32}%L</pattern>
             </layout>
         </encoder>
-        <file>C:logs/buukle/provider/wjs/wjs-error-log.html</file>
+        <file>C:/logs/buukle/buukle-wjs/wjs-error-log.html</file>
     </appender>
     <!-- 生成html格式日志结束 -->
 
